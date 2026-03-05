@@ -3,10 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Skip auth for login page, auth API, and static assets
+  // Skip auth for public routes, API routes, and static assets
   if (
     pathname === "/login" ||
-    pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/api/") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/images") ||
     pathname.startsWith("/assets") ||
@@ -17,6 +17,11 @@ export function middleware(req: NextRequest) {
 
   const shopToken = process.env.SHOP_AUTH_TOKEN;
   const adminToken = process.env.ADMIN_AUTH_TOKEN;
+
+  // If tokens aren't configured, allow access (prevents lockout during setup)
+  if (!shopToken || !adminToken) {
+    return NextResponse.next();
+  }
 
   // Admin routes require admin auth
   if (pathname.startsWith("/admin")) {
@@ -40,12 +45,6 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization)
-     * - favicon.ico
-     */
     "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };
