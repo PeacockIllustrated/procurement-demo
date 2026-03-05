@@ -50,14 +50,17 @@ export default async function ProductPage({
       <div className="grid md:grid-cols-2 gap-10">
         <div className="bg-white rounded-2xl border border-gray-100 p-8 flex items-center justify-center aspect-square">
           {product.image ? (
-            <Image
-              src={product.image}
-              alt={product.name}
-              width={400}
-              height={400}
-              className="object-contain max-h-full"
-              priority
-            />
+            <div className="flex flex-col items-center gap-3">
+              <Image
+                src={product.image}
+                alt={product.name}
+                width={400}
+                height={400}
+                className="object-contain max-h-full"
+                priority
+              />
+              <p className="text-[11px] text-gray-300 text-center">Preview image — final artwork will be professionally produced to order</p>
+            </div>
           ) : (
             <div className="text-gray-200 flex flex-col items-center gap-3">
               <svg className="w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
