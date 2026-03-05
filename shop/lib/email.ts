@@ -33,7 +33,7 @@ function buildImageAttachments(items: OrderItem[], siteUrl: string) {
   const seen = new Set<string>();
   return items
     .map((item) => {
-      const imgCode = item.base_code || item.code.replace(/\/.*$/, "");
+      const imgCode = (item.base_code || item.code.replace(/\/.*$/, "")).replace(/\//g, "_");
       if (seen.has(imgCode)) return null;
       seen.add(imgCode);
       return {
@@ -49,7 +49,7 @@ function buildImageAttachments(items: OrderItem[], siteUrl: string) {
 function itemRowsHtml(items: OrderItem[]): string {
   return items
     .map((item) => {
-      const imgCode = item.base_code || item.code.replace(/\/.*$/, "");
+      const imgCode = (item.base_code || item.code.replace(/\/.*$/, "")).replace(/\//g, "_");
       return `
     <tr>
       <td style="padding:8px 4px 8px 12px;border-bottom:1px solid #eee;vertical-align:middle;width:48px">

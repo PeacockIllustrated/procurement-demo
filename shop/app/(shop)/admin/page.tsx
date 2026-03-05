@@ -210,7 +210,7 @@ export default function AdminPage() {
                     </thead>
                     <tbody>
                       {selectedOrder.items.map((item, i) => {
-                        const imgCode = item.baseCode || item.code.replace(/\/.*$/, "");
+                        const imgCode = (item.baseCode || item.code.replace(/\/.*$/, "")).replace(/\//g, "_");
                         return (
                         <tr key={i} className="border-b border-gray-50">
                           <td className="py-2 pr-2">
