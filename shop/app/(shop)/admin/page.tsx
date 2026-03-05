@@ -5,6 +5,7 @@ import Link from "next/link";
 
 interface OrderItem {
   code: string;
+  baseCode: string | null;
   name: string;
   size: string | null;
   quantity: number;
@@ -200,33 +201,45 @@ export default function AdminPage() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-gray-100 text-left text-gray-400 text-xs">
-                        <th className="pb-2 font-medium">Code</th>
-                        <th className="pb-2 font-medium">Size</th>
+                        <th className="pb-2 font-medium w-10"></th>
+                        <th className="pb-2 font-medium">Product</th>
                         <th className="pb-2 font-medium text-center">Qty</th>
                         <th className="pb-2 font-medium text-right">Total</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {selectedOrder.items.map((item, i) => (
+                      {selectedOrder.items.map((item, i) => {
+                        const imgCode = item.baseCode || item.code.replace(/\/.*$/, "");
+                        return (
                         <tr key={i} className="border-b border-gray-50">
-                          <td className="py-2.5 font-medium text-gray-700">{item.code}</td>
-                          <td className="py-2.5 text-gray-500">{item.size || "-"}</td>
+                          <td className="py-2 pr-2">
+                            <img
+                              src={`/images/products/${imgCode}.png`}
+                              alt={item.code}
+                              className="w-9 h-9 rounded object-contain bg-gray-50"
+                            />
+                          </td>
+                          <td className="py-2.5">
+                            <p className="font-medium text-gray-700">{item.code}</p>
+                            <p className="text-xs text-gray-400">{item.name}{item.size ? ` (${item.size})` : ""}</p>
+                          </td>
                           <td className="py-2.5 text-center text-gray-500">{item.quantity}</td>
                           <td className="py-2.5 text-right font-medium">{"\u00A3"}{(item.price * item.quantity).toFixed(2)}</td>
                         </tr>
-                      ))}
+                        );
+                      })}
                     </tbody>
                     <tfoot>
                       <tr className="border-t border-gray-100">
-                        <td colSpan={3} className="pt-2.5 text-gray-500">Subtotal</td>
+                        <td colSpan={3} className="pt-2.5 text-right text-gray-500">Subtotal</td>
                         <td className="pt-2.5 text-right">{"\u00A3"}{selectedOrder.subtotal.toFixed(2)}</td>
                       </tr>
                       <tr>
-                        <td colSpan={3} className="text-gray-400 text-xs">VAT</td>
+                        <td colSpan={3} className="text-right text-gray-400 text-xs">VAT</td>
                         <td className="text-right text-gray-400 text-xs">{"\u00A3"}{selectedOrder.vat.toFixed(2)}</td>
                       </tr>
                       <tr className="font-bold text-persimmon-navy">
-                        <td colSpan={3} className="pt-2">Total</td>
+                        <td colSpan={3} className="pt-2 text-right">Total</td>
                         <td className="pt-2 text-right">{"\u00A3"}{selectedOrder.total.toFixed(2)}</td>
                       </tr>
                     </tfoot>

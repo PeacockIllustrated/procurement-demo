@@ -155,6 +155,7 @@ export async function GET() {
         .filter((item) => item.order_id === o.id)
         .map((item) => ({
           code: item.code,
+          baseCode: item.base_code,
           name: item.name,
           size: item.size,
           price: Number(item.price),
