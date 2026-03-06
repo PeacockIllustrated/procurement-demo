@@ -1152,7 +1152,7 @@
             }
           ],
           "name": "This is a no smoking site",
-          "image": null
+          "image": "/images/products/PA116.png"
         },
         {
           "baseCode": "PA127",
@@ -1313,7 +1313,7 @@
             }
           ],
           "name": "Works access",
-          "image": null
+          "image": "/images/products/PA44.png"
         },
         {
           "baseCode": "PCF122",
@@ -2685,7 +2685,7 @@
             }
           ],
           "name": "Safety helmets must be worn on this site",
-          "image": null
+          "image": "/images/products/PA120.png"
         },
         {
           "baseCode": "PA121",
@@ -3245,7 +3245,7 @@
             }
           ],
           "name": "Danger building sites are dangerous",
-          "image": null
+          "image": "/images/products/PCF02.png"
         },
         {
           "baseCode": "PCF09",
@@ -4902,7 +4902,7 @@
             }
           ],
           "name": "Fire Exit Left/Down",
-          "image": null
+          "image": "/images/products/PA50.png"
         },
         {
           "baseCode": "PA51",
@@ -5501,7 +5501,7 @@
             }
           ],
           "name": "Pedestrians",
-          "image": null
+          "image": "/images/products/PA45.png"
         },
         {
           "baseCode": "PCF144",
@@ -8952,7 +8952,7 @@
             }
           ],
           "name": "DANGER Men working overhead",
-          "image": null
+          "image": "/images/products/PA119.png"
         },
         {
           "baseCode": "PA82PCF",
@@ -9011,7 +9011,7 @@
             }
           ],
           "name": "Hard hats must be worn on this site",
-          "image": null
+          "image": "/images/products/PCFSB11.png"
         },
         {
           "baseCode": "PCFSB12",
@@ -9331,7 +9331,7 @@
             }
           ],
           "name": "No children",
-          "image": null
+          "image": "/images/products/PCFSB31.png"
         },
         {
           "baseCode": "PCFSB32",
@@ -9427,7 +9427,7 @@
             }
           ],
           "name": "Guard dogs on site",
-          "image": null
+          "image": "/images/products/PCFSB37.png"
         },
         {
           "baseCode": "PCFSB39",
@@ -10171,7 +10171,7 @@
             }
           ],
           "name": "Slow",
-          "image": null
+          "image": "/images/products/PA126.png"
         },
         {
           "baseCode": "PCF24",
@@ -10800,7 +10800,7 @@
             }
           ],
           "name": "Residents parking only",
-          "image": null
+          "image": "/images/products/PA40.png"
         },
         {
           "baseCode": "PA42",
@@ -11219,7 +11219,7 @@
             }
           ],
           "name": "NHBC reserved parking",
-          "image": null
+          "image": "/images/products/PCF314.png"
         },
         {
           "baseCode": "PCF315",
@@ -18499,7 +18499,7 @@
             }
           ],
           "name": "Safety equipment must be worn on this site",
-          "image": null
+          "image": "/images/products/PCF06.png"
         },
         {
           "baseCode": "PCF07",
@@ -19567,7 +19567,7 @@
             }
           ],
           "name": "Safety on site starts here",
-          "image": null
+          "image": "/images/products/PCF162.png"
         },
         {
           "baseCode": "PCF163",
@@ -21836,7 +21836,7 @@
             }
           ],
           "name": "Tree protection do not remove",
-          "image": null
+          "image": "/images/products/PCF48.png"
         },
         {
           "baseCode": "PCF49",
