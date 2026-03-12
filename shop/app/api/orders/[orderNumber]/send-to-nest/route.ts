@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { isAdminAuthed } from "@/lib/auth";
-import { sendNestPORequest } from "@/lib/email";
+import { buildNestPOEmailHtml } from "@/lib/email";
 
 export async function POST(
   _req: NextRequest,
@@ -65,36 +65,51 @@ export async function POST(
       total: Number(order.total),
     };
 
-    // Send email (throws on failure — status NOT updated if this fails)
-    await sendNestPORequest(orderData);
+    const makeWebhookUrl = process.env.MAKE_WEBHOOK_URL;
+    if (!makeWebhookUrl) {
+      return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
+    }
 
-    // Update status to awaiting_po (skip if already awaiting_po — idempotent re-send)
+    const siteUrl = process.env.SITE_URL || "http://localhost:3000";
+    const { subject, html } = buildNestPOEmailHtml(orderData, siteUrl);
+
+    // Fire Make webhook with isPO: true
+    const res = await fetch(makeWebhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        isPO: true,
+        emailSubject: subject,
+        emailHtml: html,
+        orderNumber: order.order_number,
+        contactName: order.contact_name,
+        contactEmail: order.email,
+        contactPhone: order.phone,
+        siteName: order.site_name,
+        siteAddress: order.site_address,
+        poNumber: order.po_number,
+        notes: order.notes,
+        subtotal: Number(order.subtotal),
+        vat: Number(order.vat),
+        total: Number(order.total),
+        itemCount: (items || []).length,
+        hasCustomItems: (items || []).some((i: Record<string, unknown>) => !!i.custom_data),
+      }),
+    });
+
+    if (!res.ok) {
+      console.error(`Make webhook failed for ${orderNumber} — ${res.status}`);
+      return NextResponse.json({ error: "Failed to send PO request" }, { status: 500 });
+    }
+
+    console.log(`Send to Nest webhook fired for ${orderNumber} — ${res.status}`);
+
+    // Update status to awaiting_po if currently new
     if (order.status === "new") {
-      const { error: updateError } = await supabase
+      await supabase
         .from("psp_orders")
         .update({ status: "awaiting_po" })
         .eq("order_number", orderNumber);
-
-      if (updateError) {
-        // Email was sent but status update failed — check if it went through anyway
-        const { data: refreshed } = await supabase
-          .from("psp_orders")
-          .select("status")
-          .eq("order_number", orderNumber)
-          .single();
-
-        if (refreshed?.status === "awaiting_po") {
-          return NextResponse.json({ success: true, message: "PO request sent to Nest" });
-        }
-
-        return NextResponse.json(
-          {
-            error: "Email sent but status update failed. Please set status to 'Awaiting PO' manually.",
-            currentStatus: refreshed?.status || order.status,
-          },
-          { status: 500 }
-        );
-      }
     }
 
     return NextResponse.json({ success: true, message: "PO request sent to Nest" });
