@@ -31,11 +31,13 @@ new → awaiting_po → in-progress → completed
 
 ### Badge Colour
 
-- `new` — green (existing)
+- `new` — blue (existing)
 - `awaiting_po` — amber/yellow (new)
 - `in-progress` — blue (existing)
-- `completed` — grey (existing)
+- `completed` — grey/green (existing)
 - `cancelled` — red (existing)
+
+Note: `cancelled` is a valid status in the database but is not currently exposed in the admin filter pills or status dropdown. This is an existing limitation we are intentionally preserving — cancellation is a rare manual operation handled directly in the database if needed.
 
 ## API: Send to Nest
 
@@ -54,7 +56,7 @@ No body required — the order number is in the URL path.
 ### Logic
 
 1. Fetch order from `psp_orders` by order number
-2. Validate: order exists, status is `new` (reject if already `awaiting_po` or later — prevents duplicate sends)
+2. Validate: order exists, status is `new` or `awaiting_po` (allows re-sending if Nest lost the email; re-send keeps status as `awaiting_po`)
 3. Fetch order items from `psp_order_items` by order ID
 4. Send PO request email to `NEST_EMAIL` env var via Resend
 5. Update order status to `awaiting_po`
@@ -74,9 +76,10 @@ No body required — the order number is in the URL path.
 
 ### Guard Rails
 
-- Rejects if order status is not `new` (prevents double-sending)
+- Rejects if order status is `in-progress`, `completed`, or `cancelled` (only `new` and `awaiting_po` are valid for sending)
+- Re-sending from `awaiting_po` is idempotent — email is re-sent, status stays `awaiting_po`
 - If email send fails, status is NOT updated (no silent failures)
-- If status update fails after email send, returns error with note that email was sent (admin can retry or manually set status)
+- If status update fails after email send, returns current order status in the error response so the admin UI can reflect reality. If the order is already `awaiting_po` (transient DB timeout where write succeeded), treat as success.
 
 ## Email Template
 
@@ -103,8 +106,9 @@ Follows the existing Persimmon email template style from `shop/lib/email.ts`:
   - Customer PO Number (if provided at checkout)
   - Notes (if provided)
 - **Items table:**
-  - Columns: Product, Size, Material, Qty, Unit Price, Line Total
+  - Uses the same 4-column layout as existing emails: product image (CID), product description (name + size inline), qty, line total
   - Custom sign items marked with sign type badge (same as existing emails)
+  - This is a deliberate match to the existing template style — Nest sees the same format the customer and team already receive
 - **Totals:**
   - Subtotal
   - VAT (20%)
@@ -112,7 +116,7 @@ Follows the existing Persimmon email template style from `shop/lib/email.ts`:
 
 ### New Function
 
-`sendNestPORequest(order, items)` added to `shop/lib/email.ts`. Uses the same Resend client and inline-HTML approach as existing email functions.
+`sendNestPORequest(order, items)` added to `shop/lib/email.ts`. Uses the same Resend client and inline-HTML approach as existing email functions. Queries `psp_order_items` directly from the database (not via the API response shape) to get all columns including `size`, `material`, and `custom_data`.
 
 ### Sender
 
@@ -122,7 +126,7 @@ Same `FROM_EMAIL` env var used for all other system emails.
 
 ### "Send to Nest" Button
 
-- **Visibility:** Appears on order cards with status `new` only
+- **Visibility:** Appears on order cards with status `new` or `awaiting_po` (re-send capability)
 - **Placement:** Inside the order detail accordion, alongside the status dropdown
 - **Style:** Amber/yellow button to visually associate with the `awaiting_po` state
 - **Confirmation:** Browser `confirm()` dialog — "Send PO request to Nest for {orderNumber}?"
@@ -148,13 +152,11 @@ Add `Awaiting PO` option to the existing status dropdown. Normal workflow is via
 
 ## Customer Orders Page
 
-Add `awaiting_po` to the status descriptions:
+Add `awaiting_po` entry to the existing `statusConfig` object in `orders/page.tsx`. Only the new entry is added — existing status descriptions are left as-is.
 
-- `new` — "Your order has been received and is being reviewed."
-- `awaiting_po` — "Your order has been sent for purchase order approval."
-- `in-progress` — "Your order is being processed."
-- `completed` — "Your order has been completed."
-- `cancelled` — "This order has been cancelled."
+- **New entry:** `awaiting_po` — label: "Awaiting PO", description: "Order sent for purchase order approval", colour: amber/yellow (consistent with admin badge)
+- **Filter pills:** Add `awaiting_po` between `new` and `in-progress` so customers can filter to it
+- **Status banner:** `awaiting_po` gets amber/yellow styling in the expanded order detail view (consistent with badge colour)
 
 ## Environment Variables
 
@@ -165,6 +167,16 @@ Add `awaiting_po` to the status descriptions:
 No new Supabase env vars needed — uses existing connection.
 
 ## Database Migration
+
+### Prerequisite
+
+The `custom_data JSONB` column on `psp_order_items` must already exist. If not yet applied, run first:
+
+```sql
+ALTER TABLE psp_order_items ADD COLUMN IF NOT EXISTS custom_data JSONB DEFAULT NULL;
+```
+
+### Status Constraint
 
 ```sql
 -- Add 'awaiting_po' to the status check constraint
