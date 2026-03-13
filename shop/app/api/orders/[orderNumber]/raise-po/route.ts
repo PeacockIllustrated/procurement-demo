@@ -2,6 +2,26 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { buildNestPOEmailHtml, buildPurchaserPOEmailHtml, generateRaisePoToken } from "@/lib/email";
 
+function esc(str: string) {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function confirmationHtml(orderNumber: string, message: string): string {
+  return `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PO Sent — ${esc(orderNumber)}</title></head>
+<body style="margin:0;font-family:Arial,sans-serif;background:#f8faf9;display:flex;align-items:center;justify-content:center;min-height:100vh">
+  <div style="text-align:center;background:white;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.08);max-width:440px;width:100%;margin:16px;padding:40px">
+    <div style="width:48px;height:48px;border-radius:50%;background:#3db28c;margin:0 auto 16px;display:flex;align-items:center;justify-content:center">
+      <svg width="24" height="24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+    </div>
+    <h1 style="color:#00474a;font-size:20px;margin:0 0 8px">${esc(message)}</h1>
+    <p style="color:#666;font-size:14px;margin:0 0 24px">Order <strong>${esc(orderNumber)}</strong> — the purchaser will receive an email with a link to attach their PO document.</p>
+    <p style="color:#999;font-size:12px;margin:0">You can close this page.</p>
+  </div>
+</body></html>`;
+}
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ orderNumber: string }> }
@@ -43,11 +63,12 @@ export async function GET(
 
     const siteUrl = process.env.SITE_URL || "http://localhost:3000";
 
-    // Prevent duplicate PO raises — only allow from "new" status
+    // Prevent duplicate — only allow from "new" status
     if (order.status !== "new") {
-      // Already raised — redirect to upload page (no &raised flag)
-      return NextResponse.redirect(
-        `${siteUrl}/po-upload/${orderNumber}?t=${token}`
+      const purchaserLabel = order.purchaser_name || order.purchaser_email || "the purchaser";
+      return new NextResponse(
+        confirmationHtml(orderNumber, `Already sent to ${purchaserLabel}`),
+        { headers: { "Content-Type": "text/html" } }
       );
     }
 
@@ -127,9 +148,11 @@ export async function GET(
 
     console.log(`Raise PO webhook fired for ${orderNumber} — ${res.status}`);
 
-    // Redirect to PO upload page with confirmation
-    return NextResponse.redirect(
-      `${siteUrl}/po-upload/${orderNumber}?t=${token}&raised=true`
+    // Show confirmation page
+    const purchaserLabel = order.purchaser_name || order.purchaser_email || "the purchaser";
+    return new NextResponse(
+      confirmationHtml(orderNumber, `Sent to ${purchaserLabel}`),
+      { headers: { "Content-Type": "text/html" } }
     );
   } catch (error) {
     console.error("Raise PO error:", error);
