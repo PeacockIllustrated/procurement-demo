@@ -55,9 +55,8 @@ export default function BasketPage() {
 
             <div className="flex-1 min-w-0">
               <h3 className="font-medium text-gray-900 truncate">{item.name}</h3>
-              <p className="text-sm text-gray-400 mt-0.5">
-                {item.customSign ? `${item.customSign.signType.charAt(0).toUpperCase() + item.customSign.signType.slice(1).replace("-", " ")} Sign` : item.code}{item.size ? ` \u2022 ${item.size}` : ""}{item.material ? ` \u2022 ${item.material}` : ""}
-              </p>
+              {item.size && <p className="text-sm text-gray-400 mt-0.5">{item.size}</p>}
+              {item.material && <p className="text-xs text-gray-300">{item.material}</p>}
               {item.customFieldValues && item.customFieldValues.length > 0 && (
                 <div className="mt-1 space-y-0.5">
                   {item.customFieldValues.map((f) => (
