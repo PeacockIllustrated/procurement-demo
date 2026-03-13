@@ -360,7 +360,7 @@ export default function CheckoutPage() {
       <h1 className="text-2xl font-bold text-persimmon-navy mb-6">Checkout</h1>
 
       <form onSubmit={handleSubmit} className="grid md:grid-cols-3 gap-8">
-        <div className="md:col-span-2 space-y-6">
+        <div className="md:col-span-2 space-y-6 min-w-0">
 
           {/* Contact section */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
@@ -484,7 +484,7 @@ export default function CheckoutPage() {
         </div>
 
         {/* Order summary sidebar */}
-        <div>
+        <div className="min-w-0">
           <div className="bg-white rounded-2xl border border-gray-100 p-6 sticky top-24">
             <h2 className="text-base font-semibold text-persimmon-navy mb-4">Order Summary</h2>
 

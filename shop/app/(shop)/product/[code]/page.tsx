@@ -56,7 +56,7 @@ export default async function ProductPage({
                 alt={product.name}
                 width={400}
                 height={400}
-                className="object-contain max-h-full"
+                className="object-contain max-h-full max-w-full"
                 priority
               />
               <p className="text-[11px] text-gray-300 text-center">Preview image — final artwork will be professionally produced to order</p>

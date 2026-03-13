@@ -472,7 +472,7 @@ export default function OrdersPage() {
 
                     <div className="space-y-5">
                       {/* Contact & Site info */}
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Contact</h3>
                           <p className="text-sm font-medium">{order.contact.contactName}</p>
@@ -488,7 +488,7 @@ export default function OrdersPage() {
 
                       {/* Purchaser */}
                       {(order.purchaserName || order.purchaserEmail) && (
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
                             <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Purchaser</h3>
                             {order.purchaserName && <p className="text-sm font-medium">{order.purchaserName}</p>}
@@ -499,7 +499,7 @@ export default function OrdersPage() {
 
                       {/* PO / Notes */}
                       {(order.poNumber || order.notes) && (
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           {order.poNumber && (
                             <div>
                               <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">PO Number</h3>
@@ -533,6 +533,7 @@ export default function OrdersPage() {
                       {/* Items table */}
                       <div>
                         <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Items</h3>
+                        <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                           <thead>
                             <tr className="border-b border-gray-100 text-left text-gray-400 text-xs">
@@ -664,6 +665,7 @@ export default function OrdersPage() {
                             </tr>
                           </tfoot>
                         </table>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -525,7 +525,7 @@ export default function AdminPage() {
                       </span>
                     )}
                   </div>
-                  <div className="flex gap-2 mt-3" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex gap-2 mt-3 flex-wrap" onClick={(e) => e.stopPropagation()}>
                     <a
                       href={`/api/orders/${order.orderNumber}/delivery-note`}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-persimmon-navy border border-persimmon-navy/20 rounded-lg hover:bg-persimmon-navy/5 transition"
@@ -552,11 +552,11 @@ export default function AdminPage() {
                 {/* Expanded detail (accordion) */}
                 {isExpanded && (
                   <div className="bg-white rounded-b-2xl border border-t-0 border-persimmon-green p-6">
-                    <div className="flex justify-between items-start mb-5">
+                    <div className="flex flex-col sm:flex-row justify-between items-start gap-3 mb-5">
                       <p className="text-xs text-gray-400">
                         {new Date(order.createdAt).toLocaleString("en-GB")}
                       </p>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         {(order.status === "new" || order.status === "awaiting_po") && (
                           <button
                             onClick={(e) => { e.stopPropagation(); sendToNest(order.orderNumber); }}
@@ -593,7 +593,7 @@ export default function AdminPage() {
                     )}
 
                     <div className="space-y-5">
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Contact</h3>
                           <p className="text-sm font-medium">{order.contact.contactName}</p>
@@ -608,7 +608,7 @@ export default function AdminPage() {
                       </div>
 
                       {(order.purchaserName || order.purchaserEmail) && (
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
                             <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Purchaser</h3>
                             {order.purchaserName && <p className="text-sm font-medium">{order.purchaserName}</p>}
@@ -618,7 +618,7 @@ export default function AdminPage() {
                       )}
 
                       {(order.poNumber || order.notes) && (
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           {order.poNumber && (
                             <div>
                               <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">PO Number</h3>
@@ -636,6 +636,7 @@ export default function AdminPage() {
 
                       <div>
                         <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Items</h3>
+                        <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                           <thead>
                             <tr className="border-b border-gray-100 text-left text-gray-400 text-xs">
@@ -728,6 +729,7 @@ export default function AdminPage() {
                             </tr>
                           </tfoot>
                         </table>
+                        </div>
                       </div>
                     </div>
                   </div>
