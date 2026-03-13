@@ -50,7 +50,7 @@ export default async function ProductPage({
       <div className="grid md:grid-cols-2 gap-10">
         <div className="bg-white rounded-2xl border border-gray-100 p-8 flex items-center justify-center aspect-square">
           {product.image ? (
-            <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-col items-center gap-3 w-full max-h-full">
               <Image
                 src={product.image}
                 alt={product.name}
