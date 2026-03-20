@@ -17,6 +17,12 @@ interface OrderItem {
     shape?: string;
     additionalNotes?: string;
     fields?: Array<{ label: string; key: string; value: string }>;
+    requestedWidth?: number;
+    requestedHeight?: number;
+    matchedVariantCode?: string;
+    matchedSize?: string;
+    matchedFromProduct?: string;
+    requiresQuote?: boolean;
   } | null;
 }
 
@@ -524,6 +530,11 @@ export default function AdminPage() {
                         Custom Sign
                       </span>
                     )}
+                    {order.items.some((i) => i.customData?.type === "custom_size") && (
+                      <span className="px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-semibold rounded-full">
+                        Custom Size
+                      </span>
+                    )}
                   </div>
                   <div className="flex gap-2 mt-3 flex-wrap" onClick={(e) => e.stopPropagation()}>
                     <a
@@ -706,6 +717,40 @@ export default function AdminPage() {
                                     </td>
                                     <td className="py-2.5 text-center text-gray-500">{item.quantity}</td>
                                     <td className="py-2.5 text-right font-medium text-amber-600 text-xs">Quote</td>
+                                  </tr>
+                                );
+                              }
+
+                              // Custom size request
+                              if (item.customData?.type === "custom_size") {
+                                const imgCode = (item.baseCode || item.code.replace(/\/.*$/, "").replace(/-cs\d+$/, "")).replace(/\//g, "_");
+                                return (
+                                  <tr key={i} className="border-b border-gray-50">
+                                    <td className="py-2 pr-2">
+                                      <img
+                                        src={`/images/products/${imgCode}.png`}
+                                        alt=""
+                                        className="w-9 h-9 object-contain rounded"
+                                        onError={(e) => {
+                                          (e.target as HTMLImageElement).style.display = "none";
+                                        }}
+                                      />
+                                    </td>
+                                    <td className="py-2.5">
+                                      <p className="font-medium text-gray-900 text-xs">{item.name}</p>
+                                      <p className="text-xs text-gray-500">{item.size} &middot; {item.customData.matchedSize ? `Priced as ${item.customData.matchedSize}` : "Requires quote"}</p>
+                                      {item.customData.matchedFromProduct && (
+                                        <p className="text-[10px] text-gray-400">(price from {item.customData.matchedFromProduct})</p>
+                                      )}
+                                    </td>
+                                    <td className="py-2.5 text-center text-gray-500">{item.quantity}</td>
+                                    <td className="py-2.5 text-right font-medium text-xs">
+                                      {item.customData.requiresQuote ? (
+                                        <span className="text-amber-600">Quote</span>
+                                      ) : (
+                                        <span className="text-gray-700">{"\u00A3"}{(item.price * item.quantity).toFixed(2)}</span>
+                                      )}
+                                    </td>
                                   </tr>
                                 );
                               }
