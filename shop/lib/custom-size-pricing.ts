@@ -65,6 +65,24 @@ function fitsRequest(
 }
 
 /**
+ * Return the display size string for a variant, rotating if needed
+ * so the user sees dimensions in the orientation that fits their request.
+ */
+function displaySize(
+  parsed: ParsedSize,
+  reqWidth: number,
+  reqHeight: number
+): string {
+  const normalFit =
+    parsed.width >= reqWidth && parsed.height >= reqHeight;
+  if (normalFit) {
+    return `${parsed.width}x${parsed.height}mm`;
+  }
+  // Rotated fit
+  return `${parsed.height}x${parsed.width}mm`;
+}
+
+/**
  * Find the best matching variant from a list of candidates.
  * Picks the one with the lowest price; breaks ties by smallest area.
  */
@@ -72,7 +90,7 @@ function findBestMatch(
   candidates: { variant: Variant; parsed: ParsedSize; fromProduct: string | null }[],
   reqWidth: number,
   reqHeight: number
-): { variant: Variant; fromProduct: string | null } | null {
+): { variant: Variant; fromProduct: string | null; displaySize: string } | null {
   const fitting = candidates.filter((c) =>
     fitsRequest(c.parsed, reqWidth, reqHeight)
   );
@@ -87,7 +105,11 @@ function findBestMatch(
     return areaA - areaB;
   });
 
-  return { variant: fitting[0].variant, fromProduct: fitting[0].fromProduct };
+  return {
+    variant: fitting[0].variant,
+    fromProduct: fitting[0].fromProduct,
+    displaySize: displaySize(fitting[0].parsed, reqWidth, reqHeight),
+  };
 }
 
 /**
@@ -155,7 +177,7 @@ export function calculateCustomSizePricing(
         material,
         matchedVariant: {
           code: ownMatch.variant.code,
-          size: ownMatch.variant.size!,
+          size: ownMatch.displaySize,
           price: ownMatch.variant.price,
         },
         matchedFromProduct: null,
@@ -173,7 +195,7 @@ export function calculateCustomSizePricing(
           material,
           matchedVariant: {
             code: siblingMatch.variant.code,
-            size: siblingMatch.variant.size!,
+            size: siblingMatch.displaySize,
             price: siblingMatch.variant.price,
           },
           matchedFromProduct: siblingMatch.fromProduct,
