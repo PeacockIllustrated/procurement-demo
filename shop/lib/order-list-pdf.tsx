@@ -490,8 +490,8 @@ function OrderListDocument({ order, images, artworkCodes }: { order: OrderData; 
 
           {/* Grouped standard items */}
           {standard.map((group, gi) => (
-            <View key={group.label} wrap={false}>
-              <View style={[s.groupHeader, gi === 0 ? s.groupHeaderFirst : {}]}>
+            <View key={group.label}>
+              <View style={[s.groupHeader, gi === 0 ? s.groupHeaderFirst : {}]} wrap={false}>
                 <Text style={s.groupTitle}>{group.label}</Text>
                 <Text style={s.groupCount}>{group.totalQty} sign{group.totalQty !== 1 ? "s" : ""}</Text>
               </View>
@@ -512,8 +512,8 @@ function OrderListDocument({ order, images, artworkCodes }: { order: OrderData; 
 
           {/* Custom signs section */}
           {custom.length > 0 && (
-            <View wrap={false}>
-              <View style={[s.groupHeader, standard.length === 0 ? s.groupHeaderFirst : {}]}>
+            <View>
+              <View style={[s.groupHeader, standard.length === 0 ? s.groupHeaderFirst : {}]} wrap={false}>
                 <Text style={s.groupTitle}>Custom Signs</Text>
                 <Text style={s.groupCount}>{custom.reduce((s, i) => s + i.quantity, 0)} sign{custom.reduce((s, i) => s + i.quantity, 0) !== 1 ? "s" : ""}</Text>
               </View>

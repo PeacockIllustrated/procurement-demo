@@ -260,6 +260,7 @@ export async function GET() {
       purchaserName: o.purchaser_name || null,
       purchaserEmail: o.purchaser_email || null,
       poDocumentName: o.po_document_name || null,
+      dnDocumentName: o.dn_document_name || null,
       items: (allItems || [])
         .filter((item) => item.order_id === o.id)
         .map((item) => ({
