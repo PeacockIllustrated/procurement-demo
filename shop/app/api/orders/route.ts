@@ -34,15 +34,15 @@ export async function POST(req: NextRequest) {
 
     // Recalculate totals server-side (never trust client)
     let subtotal = 0;
-    const validatedItems = items.map((item: { code: string; baseCode?: string; name: string; size?: string; material?: string; description?: string; price: number; quantity: number; customSign?: { signType: string; textContent: string; shape: string; additionalNotes: string }; customFieldValues?: Array<{ label: string; key: string; value: string }> }) => {
+    const validatedItems = items.map((item: { code: string; baseCode?: string; name: string; size?: string; material?: string; description?: string; price: number; quantity: number; customSign?: { signType: string; textContent: string; shape: string; additionalNotes: string }; customFieldValues?: Array<{ label: string; key: string; value: string }>; customSizeData?: { type: string; requestedWidth: number; requestedHeight: number; matchedVariantCode: string | null; matchedSize: string | null; matchedFromProduct: string | null; requiresQuote: boolean } }) => {
       const price = Math.round(Number(item.price) * 100) / 100;
       const quantity = Math.max(1, Math.min(9999, Math.floor(Number(item.quantity))));
-      const isCustomSign = !!item.customSign;
-      if (!isCustomSign && (price <= 0 || price > 100000)) {
+      const isQuoteItem = !!item.customSign || !!item.customSizeData?.requiresQuote;
+      if (!isQuoteItem && (price <= 0 || price > 100000)) {
         throw new Error(`Invalid price for item ${item.code}`);
       }
-      if (isCustomSign && price !== 0) {
-        throw new Error(`Custom sign items must have price 0`);
+      if (isQuoteItem && price !== 0) {
+        throw new Error(`Quote items must have price 0`);
       }
       const lineTotal = Math.round(price * quantity * 100) / 100;
       subtotal += lineTotal;
@@ -65,6 +65,16 @@ export async function POST(req: NextRequest) {
             key: String(f.key),
             value: String(f.value),
           })),
+        };
+      } else if (item.customSizeData) {
+        custom_data = {
+          type: "custom_size" as const,
+          requestedWidth: Number(item.customSizeData.requestedWidth),
+          requestedHeight: Number(item.customSizeData.requestedHeight),
+          matchedVariantCode: item.customSizeData.matchedVariantCode ? String(item.customSizeData.matchedVariantCode) : null,
+          matchedSize: item.customSizeData.matchedSize ? String(item.customSizeData.matchedSize) : null,
+          matchedFromProduct: item.customSizeData.matchedFromProduct ? String(item.customSizeData.matchedFromProduct) : null,
+          requiresQuote: !!item.customSizeData.requiresQuote,
         };
       }
 
