@@ -281,6 +281,7 @@ export async function GET() {
       items: (allItems || [])
         .filter((item) => item.order_id === o.id)
         .map((item) => ({
+          id: item.id,
           code: item.code,
           baseCode: item.base_code,
           name: item.name,

@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 
 interface OrderItem {
+  id: string;
   code: string;
   baseCode: string | null;
   name: string;
@@ -70,6 +71,8 @@ export default function AdminPage() {
   const [search, setSearch] = useState("");
   const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
   const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
+  const [editingPrices, setEditingPrices] = useState<Record<string, string>>({});
+  const [savingPrice, setSavingPrice] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/orders")
@@ -130,7 +133,13 @@ export default function AdminPage() {
     let result = orders;
     if (selectedContactId) result = result.filter((o) => o.contactId === selectedContactId);
     if (selectedSiteId) result = result.filter((o) => o.siteId === selectedSiteId);
-    if (filter !== "all") result = result.filter((o) => o.status === filter);
+    if (filter === "requires_pricing") {
+      result = result.filter((o) => o.items.some((item) =>
+        (item.customData?.signType || (item.customData?.type === "custom_size" && item.customData?.requiresQuote)) && item.price === 0
+      ));
+    } else if (filter !== "all") {
+      result = result.filter((o) => o.status === filter);
+    }
     if (search.trim()) {
       const q = search.toLowerCase();
       result = result.filter(
@@ -148,6 +157,7 @@ export default function AdminPage() {
     "awaiting_po": "bg-yellow-50 text-yellow-600",
     "in-progress": "bg-amber-50 text-amber-600",
     completed: "bg-emerald-50 text-emerald-600",
+    requires_pricing: "bg-orange-100 text-orange-700",
   };
 
   const statusLabels: Record<string, string> = {
@@ -155,6 +165,7 @@ export default function AdminPage() {
     "awaiting_po": "Awaiting PO",
     "in-progress": "In Progress",
     completed: "Completed",
+    requires_pricing: "Requires Pricing",
   };
 
   const updateStatus = async (orderNumber: string, newStatus: string) => {
@@ -208,6 +219,52 @@ export default function AdminPage() {
       alert("Network error — please try again.");
     } finally {
       setDeletingOrder(null);
+    }
+  };
+
+  const isQuoteItem = (item: OrderItem) =>
+    (item.customData?.signType || (item.customData?.type === "custom_size" && item.customData?.requiresQuote)) && item.price === 0;
+
+  const orderNeedsPricing = (order: Order) =>
+    order.items.some((item) => isQuoteItem(item));
+
+  const saveItemPrice = async (orderNumber: string, itemId: string) => {
+    const raw = editingPrices[itemId];
+    const price = Math.round(Number(raw) * 100) / 100;
+    if (!price || price <= 0) return;
+
+    setSavingPrice(itemId);
+    try {
+      const res = await fetch(`/api/orders/${orderNumber}/items/${itemId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ price }),
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+
+      setOrders((prev) =>
+        prev.map((o) => {
+          if (o.orderNumber !== orderNumber) return o;
+          return {
+            ...o,
+            subtotal: data.orderTotals.subtotal,
+            deliveryFee: data.orderTotals.deliveryFee,
+            vat: data.orderTotals.vat,
+            total: data.orderTotals.total,
+            items: o.items.map((item) =>
+              item.id === itemId ? { ...item, price } : item
+            ),
+          };
+        })
+      );
+      setEditingPrices((prev) => {
+        const next = { ...prev };
+        delete next[itemId];
+        return next;
+      });
+    } finally {
+      setSavingPrice(null);
     }
   };
 
@@ -457,7 +514,7 @@ export default function AdminPage() {
       </div>
 
       <div className="flex gap-2 mb-6 overflow-x-auto">
-        {["all", "new", "awaiting_po", "in-progress", "completed"].map((f) => (
+        {["all", "new", "awaiting_po", "in-progress", "completed", "requires_pricing"].map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
@@ -470,7 +527,11 @@ export default function AdminPage() {
             {statusLabels[f] || f.charAt(0).toUpperCase() + f.slice(1)}
             {f !== "all" && (
               <span className="ml-1.5 opacity-60">
-                ({orders.filter((o) => o.status === f).length})
+                ({f === "requires_pricing"
+                  ? orders.filter((o) => o.items.some((item) =>
+                      (item.customData?.signType || (item.customData?.type === "custom_size" && item.customData?.requiresQuote)) && item.price === 0
+                    )).length
+                  : orders.filter((o) => o.status === f).length})
               </span>
             )}
           </button>
@@ -535,6 +596,11 @@ export default function AdminPage() {
                     {order.items.some((i) => i.customData?.type === "custom_size") && (
                       <span className="px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-semibold rounded-full">
                         Custom Size
+                      </span>
+                    )}
+                    {orderNeedsPricing(order) && (
+                      <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-[10px] font-semibold rounded-full">
+                        Requires Pricing
                       </span>
                     )}
                   </div>
@@ -739,7 +805,43 @@ export default function AdminPage() {
                                       )}
                                     </td>
                                     <td className="py-2.5 text-center text-gray-500">{item.quantity}</td>
-                                    <td className="py-2.5 text-right font-medium text-amber-600 text-xs">Quote</td>
+                                    <td className="py-2.5 text-right font-medium text-xs">
+                                      {item.price === 0 || editingPrices[item.id] !== undefined ? (
+                                        <div className="flex items-center justify-end gap-1">
+                                          <span className="text-gray-400 text-xs">{"\u00A3"}</span>
+                                          <input
+                                            type="number"
+                                            step="0.01"
+                                            min="0.01"
+                                            placeholder="0.00"
+                                            value={editingPrices[item.id] ?? ""}
+                                            onChange={(e) => setEditingPrices((prev) => ({ ...prev, [item.id]: e.target.value }))}
+                                            onKeyDown={(e) => { if (e.key === "Enter") saveItemPrice(order.orderNumber, item.id); }}
+                                            className="w-20 px-2 py-1 text-right text-sm border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-persimmon-green/30 focus:border-persimmon-green"
+                                          />
+                                          <button
+                                            onClick={() => saveItemPrice(order.orderNumber, item.id)}
+                                            disabled={savingPrice === item.id || !editingPrices[item.id]}
+                                            className="px-2 py-1 text-[10px] font-semibold bg-persimmon-green text-white rounded-lg hover:bg-persimmon-green/90 transition disabled:opacity-40"
+                                          >
+                                            {savingPrice === item.id ? "..." : "Save"}
+                                          </button>
+                                        </div>
+                                      ) : (
+                                        <div className="flex items-center justify-end gap-1">
+                                          <span className="text-gray-700">{"\u00A3"}{(item.price * item.quantity).toFixed(2)}</span>
+                                          <button
+                                            onClick={() => setEditingPrices((prev) => ({ ...prev, [item.id]: "" }))}
+                                            className="text-gray-300 hover:text-persimmon-green transition ml-0.5"
+                                            title="Edit price"
+                                          >
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                            </svg>
+                                          </button>
+                                        </div>
+                                      )}
+                                    </td>
                                   </tr>
                                 );
                               }
@@ -768,8 +870,40 @@ export default function AdminPage() {
                                     </td>
                                     <td className="py-2.5 text-center text-gray-500">{item.quantity}</td>
                                     <td className="py-2.5 text-right font-medium text-xs">
-                                      {item.customData.requiresQuote ? (
-                                        <span className="text-amber-600">Quote</span>
+                                      {item.customData.requiresQuote && (item.price === 0 || editingPrices[item.id] !== undefined) ? (
+                                        <div className="flex items-center justify-end gap-1">
+                                          <span className="text-gray-400 text-xs">{"\u00A3"}</span>
+                                          <input
+                                            type="number"
+                                            step="0.01"
+                                            min="0.01"
+                                            placeholder="0.00"
+                                            value={editingPrices[item.id] ?? ""}
+                                            onChange={(e) => setEditingPrices((prev) => ({ ...prev, [item.id]: e.target.value }))}
+                                            onKeyDown={(e) => { if (e.key === "Enter") saveItemPrice(order.orderNumber, item.id); }}
+                                            className="w-20 px-2 py-1 text-right text-sm border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-persimmon-green/30 focus:border-persimmon-green"
+                                          />
+                                          <button
+                                            onClick={() => saveItemPrice(order.orderNumber, item.id)}
+                                            disabled={savingPrice === item.id || !editingPrices[item.id]}
+                                            className="px-2 py-1 text-[10px] font-semibold bg-persimmon-green text-white rounded-lg hover:bg-persimmon-green/90 transition disabled:opacity-40"
+                                          >
+                                            {savingPrice === item.id ? "..." : "Save"}
+                                          </button>
+                                        </div>
+                                      ) : item.customData.requiresQuote && item.price > 0 && editingPrices[item.id] === undefined ? (
+                                        <div className="flex items-center justify-end gap-1">
+                                          <span className="text-gray-700">{"\u00A3"}{(item.price * item.quantity).toFixed(2)}</span>
+                                          <button
+                                            onClick={() => setEditingPrices((prev) => ({ ...prev, [item.id]: "" }))}
+                                            className="text-gray-300 hover:text-persimmon-green transition ml-0.5"
+                                            title="Edit price"
+                                          >
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                            </svg>
+                                          </button>
+                                        </div>
                                       ) : (
                                         <span className="text-gray-700">{"\u00A3"}{(item.price * item.quantity).toFixed(2)}</span>
                                       )}
@@ -829,6 +963,15 @@ export default function AdminPage() {
                               <td colSpan={3} className="pt-2 text-right">Total</td>
                               <td className="pt-2 text-right">{"\u00A3"}{order.total.toFixed(2)}</td>
                             </tr>
+                            {orderNeedsPricing(order) && (
+                              <tr>
+                                <td colSpan={4} className="pt-3 text-center">
+                                  <span className="text-[11px] text-orange-600 bg-orange-50 px-3 py-1 rounded-full font-medium">
+                                    Some items still require pricing
+                                  </span>
+                                </td>
+                              </tr>
+                            )}
                           </tfoot>
                         </table>
                         </div>

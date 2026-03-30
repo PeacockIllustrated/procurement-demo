@@ -115,6 +115,7 @@ export async function GET(
       poNumber: order.po_number,
       notes: order.notes,
       items: (items || []).map((item) => ({
+        id: item.id,
         code: item.code,
         name: item.name,
         size: item.size,
