@@ -4,7 +4,7 @@
 -- Run this in Supabase SQL Editor to create the required tables for a new client.
 --
 -- IMPORTANT: Replace {prefix} below with the client's unique 3-letter prefix.
--- Convention: derive from company name (e.g. psp = Persimmon, bal = Balfour Beatty,
+-- Convention: derive from company name (e.g. bal = Balfour Beatty,
 -- kpm = Keepmoat). This MUST match the dbPrefix value in shop/lib/brand.ts.
 --
 -- All clients share the same Supabase database, so unique prefixes prevent

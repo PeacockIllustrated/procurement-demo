@@ -1,5 +1,5 @@
 -- =============================================================================
--- Kier Signage Portal — Supabase Schema (prefix: ker)
+-- Signage Portal — Supabase Schema (prefix: ker)
 -- =============================================================================
 -- Run order: contacts & sites & purchasers first (referenced by orders FK).
 -- =============================================================================
