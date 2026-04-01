@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --brand-primary: #007B86;
-  --brand-primary-light: #1A9AA5;
-  --brand-primary-dark: #005F68;
-  --brand-navy: #1A1A1A;
-  --brand-navy-light: #333333;
+  --brand-primary: #6B7280;
+  --brand-primary-light: #9CA3AF;
+  --brand-primary-dark: #4B5563;
+  --brand-navy: #1F2937;
+  --brand-navy-light: #374151;
   --brand-gray: #F4F6F8;
   --brand-gray-dark: #E2E6EA;
   --background: #F8FAFB;
