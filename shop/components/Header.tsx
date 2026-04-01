@@ -8,7 +8,7 @@ import BasketDrawer from "./BasketDrawer";
 import { useDemoBrand } from "@/lib/demo-brand";
 
 export default function Header() {
-  const { totalItems, totalPrice, setDrawerOpen } = useBasket();
+  const { totalItems, setDrawerOpen } = useBasket();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { brand: demoBrand } = useDemoBrand();
@@ -77,10 +77,6 @@ export default function Header() {
               {totalItems > 0 && (
                 <>
                   <span className="text-brand-navy">{totalItems}</span>
-                  <span className="text-gray-300">|</span>
-                  <span className="text-brand-primary font-semibold">
-                    {"\u00A3"}{totalPrice.toFixed(2)}
-                  </span>
                   <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-brand-primary rounded-full" />
                 </>
               )}

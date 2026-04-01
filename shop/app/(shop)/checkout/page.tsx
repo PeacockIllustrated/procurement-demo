@@ -40,7 +40,7 @@ interface Purchaser {
 }
 
 export default function CheckoutPage() {
-  const { items, totalPrice, deliveryFee, clearBasket } = useBasket();
+  const { items, clearBasket } = useBasket();
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
 
@@ -482,9 +482,7 @@ export default function CheckoutPage() {
                     {item.customSign || item.customSizeData?.requiresQuote ? (
                       <span className="font-medium text-amber-600 shrink-0 text-xs">Quote</span>
                     ) : (
-                      <span className="font-medium text-gray-700 shrink-0">
-                        {"\u00A3"}{(item.price * item.quantity).toFixed(2)}
-                      </span>
+                      <span className="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full shrink-0">T.B.D</span>
                     )}
                   </div>
                   {item.customFieldValues && item.customFieldValues.length > 0 && (
@@ -502,25 +500,10 @@ export default function CheckoutPage() {
 
             <div className="border-t border-gray-100 pt-3 space-y-2">
               <div className="flex justify-between text-sm text-gray-400">
-                <span>Subtotal</span>
-                <span>{"\u00A3"}{totalPrice.toFixed(2)}</span>
+                <span>Items</span>
+                <span className="font-medium text-brand-navy">{items.length}</span>
               </div>
-              <div className="flex justify-between text-sm text-gray-400">
-                <span>Delivery</span>
-                {deliveryFee > 0 ? (
-                  <span>{"\u00A3"}{deliveryFee.toFixed(2)}</span>
-                ) : (
-                  <span className="text-brand-primary font-medium">FREE</span>
-                )}
-              </div>
-              <div className="flex justify-between text-sm text-gray-400">
-                <span>VAT (20%)</span>
-                <span>{"\u00A3"}{((totalPrice + deliveryFee) * 0.2).toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between font-bold text-brand-navy pt-2 border-t border-gray-100">
-                <span>Total</span>
-                <span>{"\u00A3"}{((totalPrice + deliveryFee) * 1.2).toFixed(2)}</span>
-              </div>
+              <p className="text-xs text-gray-400">Pricing confirmed after order review.</p>
             </div>
 
             <button
@@ -539,7 +522,7 @@ export default function CheckoutPage() {
             )}
 
             <p className="text-[11px] text-gray-400 mt-3 text-center leading-relaxed">
-              All prices exclude VAT. You will receive a confirmation email.
+              Pricing will be confirmed after order review.
             </p>
             {items.some((i) => i.customSign || i.customSizeData?.requiresQuote) && (
               <p className="text-[11px] text-amber-600 mt-2 text-center leading-relaxed">

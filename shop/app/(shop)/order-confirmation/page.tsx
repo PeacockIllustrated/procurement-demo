@@ -26,7 +26,7 @@ function OrderConfirmationContent() {
       </div>
 
       <p className="text-sm text-gray-400 mb-8">
-        A confirmation email has been sent with your order details.
+        Your order has been submitted. Our team will review it and be in touch shortly.
       </p>
 
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3">

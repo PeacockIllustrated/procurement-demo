@@ -399,9 +399,7 @@ export default function OrdersPage() {
                         <span className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${status.color}`}>
                           {status.label}
                         </span>
-                        <p className="text-sm font-bold text-brand-navy mt-1.5">
-                          {"\u00A3"}{order.total.toFixed(2)}
-                        </p>
+                        <span className="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full mt-1.5 inline-block">T.B.D</span>
                         <p className="text-[11px] text-gray-400 mt-0.5">
                           {new Date(order.createdAt).toLocaleDateString("en-GB", {
                             day: "numeric",
@@ -629,8 +627,7 @@ export default function OrdersPage() {
                                   </td>
                                   <td className="py-2.5 text-center text-gray-500">{item.quantity}</td>
                                   <td className="py-2.5 text-right font-medium">
-                                    {"\u00A3"}
-                                    {(item.price * item.quantity).toFixed(2)}
+                                    <span className="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">T.B.D</span>
                                   </td>
                                 </tr>
                               );
@@ -639,41 +636,15 @@ export default function OrdersPage() {
                           <tfoot>
                             <tr className="border-t border-gray-100">
                               <td colSpan={3} className="pt-2.5 text-right text-gray-500">
-                                Subtotal
+                                Items
                               </td>
-                              <td className="pt-2.5 text-right">
-                                {"\u00A3"}
-                                {order.subtotal.toFixed(2)}
-                              </td>
-                            </tr>
-                            <tr>
-                              <td colSpan={3} className="text-right text-gray-400 text-xs">
-                                Delivery
-                              </td>
-                              <td className="text-right text-gray-400 text-xs">
-                                {order.deliveryFee > 0 ? (
-                                  <>{"\u00A3"}{order.deliveryFee.toFixed(2)}</>
-                                ) : (
-                                  <span className="text-brand-primary font-medium">FREE</span>
-                                )}
+                              <td className="pt-2.5 text-right font-medium text-brand-navy">
+                                {order.items.length}
                               </td>
                             </tr>
                             <tr>
-                              <td colSpan={3} className="text-right text-gray-400 text-xs">
-                                VAT (20%)
-                              </td>
-                              <td className="text-right text-gray-400 text-xs">
-                                {"\u00A3"}
-                                {order.vat.toFixed(2)}
-                              </td>
-                            </tr>
-                            <tr className="font-bold text-brand-navy">
-                              <td colSpan={3} className="pt-2 text-right">
-                                Total
-                              </td>
-                              <td className="pt-2 text-right">
-                                {"\u00A3"}
-                                {order.total.toFixed(2)}
+                              <td colSpan={4} className="pt-1 text-right text-gray-400 text-xs">
+                                Pricing confirmed after order review.
                               </td>
                             </tr>
                           </tfoot>

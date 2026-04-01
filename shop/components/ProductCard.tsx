@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Product } from "@/lib/catalog";
 
 export default function ProductCard({ product }: { product: Product }) {
-  const minPrice = Math.min(...product.variants.map((v) => v.price));
   const hasMultipleVariants = product.variants.length > 1;
 
   return (
@@ -40,10 +39,7 @@ export default function ProductCard({ product }: { product: Product }) {
           {product.name}
         </h3>
         <div className="flex items-baseline justify-between">
-          <span className="text-brand-navy font-bold text-base">
-            {hasMultipleVariants && <span className="text-xs font-normal text-gray-400 mr-0.5">from </span>}
-            {"\u00A3"}{minPrice.toFixed(2)}
-          </span>
+          <span className="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">T.B.D</span>
           <span className="text-[11px] text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-0.5">
             View
             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -220,22 +220,7 @@ export default function CustomSizeSection({ product, category }: Props) {
                       This size requires a manual quote
                     </p>
                   ) : (
-                    <>
-                      <p className="text-2xl font-bold text-brand-navy mt-1">
-                        {"\u00A3"}
-                        {result.matchedVariant!.price.toFixed(2)}
-                      </p>
-                      <p className="text-[11px] text-gray-400 mt-0.5">
-                        ex. VAT &middot; priced as{" "}
-                        {result.matchedVariant!.size}
-                        {result.matchedFromProduct && (
-                          <span>
-                            {" "}
-                            (from {result.matchedFromProduct})
-                          </span>
-                        )}
-                      </p>
-                    </>
+                    <span className="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full mt-1 inline-block">T.B.D</span>
                   )}
                 </div>
               </div>
