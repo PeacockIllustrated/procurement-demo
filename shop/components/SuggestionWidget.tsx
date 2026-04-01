@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createSuggestion } from "@/lib/demo-data";
 
 export default function SuggestionWidget() {
   const [open, setOpen] = useState(false);
@@ -18,15 +19,10 @@ export default function SuggestionWidget() {
     setError("");
 
     try {
-      const res = await fetch("/api/suggestions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), message: message.trim() }),
-      });
+      const result = await createSuggestion({ name: name.trim(), message: message.trim() });
 
-      if (!res.ok) {
-        const data = await res.json();
-        setError(data.error || "Something went wrong");
+      if (!result) {
+        setError("Something went wrong");
         setSubmitting(false);
         return;
       }

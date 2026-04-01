@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import { getOrders } from "@/lib/demo-data";
 
 interface OrderItem {
   code: string;
@@ -59,10 +60,9 @@ export default function OrdersPage() {
   const [lightbox, setLightbox] = useState<{ src: string; code: string } | null>(null);
 
   useEffect(() => {
-    fetch("/api/orders")
-      .then((res) => res.json())
-      .then((data) => {
-        setOrders(data.orders || []);
+    getOrders()
+      .then((orders) => {
+        setOrders(orders as Order[]);
         setLoading(false);
       })
       .catch(() => setLoading(false));

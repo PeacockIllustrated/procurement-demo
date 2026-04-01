@@ -4,6 +4,21 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useBasket } from "@/components/BasketContext";
 import Link from "next/link";
+import {
+  getContacts,
+  createContact,
+  updateContact,
+  deleteContact as deleteContactDb,
+  getSites,
+  createSite,
+  updateSite,
+  deleteSite as deleteSiteDb,
+  getPurchasers,
+  createPurchaser,
+  updatePurchaser,
+  deletePurchaser as deletePurchaserDb,
+  submitOrder,
+} from "@/lib/demo-data";
 
 interface Contact {
   id: string;
@@ -68,9 +83,9 @@ export default function CheckoutPage() {
 
   // Fetch contacts and sites on mount
   useEffect(() => {
-    fetch("/api/contacts").then((r) => r.json()).then((d) => setContacts(d.contacts || [])).catch(() => {});
-    fetch("/api/sites").then((r) => r.json()).then((d) => setSites(d.sites || [])).catch(() => {});
-    fetch("/api/purchasers").then((r) => r.json()).then((d) => setPurchasers(d.purchasers || [])).catch(() => {});
+    getContacts().then((rows) => setContacts(rows.map((r: Record<string, unknown>) => ({ id: r.id as string, name: r.name as string, email: r.email as string, phone: r.phone as string }))));
+    getSites().then((rows) => setSites(rows.map((r: Record<string, unknown>) => ({ id: r.id as string, name: r.name as string, address: r.address as string }))));
+    getPurchasers().then((rows) => setPurchasers(rows.map((r: Record<string, unknown>) => ({ id: r.id as string, name: r.name as string, email: r.email as string }))));
   }, []);
 
   if (items.length === 0) {
@@ -113,11 +128,11 @@ export default function CheckoutPage() {
     if (!editContactForm.name.trim() || !editContactForm.email.trim() || !editContactForm.phone.trim()) { alert("All fields are required."); return; }
     setSavingEdit(true);
     try {
-      const res = await fetch("/api/contacts", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: editingContact.id, ...editContactForm }) });
-      if (res.ok) {
-        const updated: Contact = await res.json();
-        setContacts((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
-        if (selectedContact?.id === updated.id) setSelectedContact(updated);
+      const updated = await updateContact(editingContact.id, editContactForm);
+      if (updated) {
+        const contact: Contact = { id: updated.id as string, name: updated.name as string, email: updated.email as string, phone: updated.phone as string };
+        setContacts((prev) => prev.map((c) => (c.id === contact.id ? contact : c)));
+        if (selectedContact?.id === contact.id) setSelectedContact(contact);
         setEditingContact(null);
       }
     } catch { /* ignore */ }
@@ -127,12 +142,10 @@ export default function CheckoutPage() {
   const deleteContact = async (id: string) => {
     if (!confirm("Remove this contact? Orders placed with this contact will keep their data.")) return;
     try {
-      const res = await fetch("/api/contacts", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
-      if (res.ok) {
-        setContacts((prev) => prev.filter((c) => c.id !== id));
-        if (selectedContact?.id === id) setSelectedContact(null);
-        if (editingContact?.id === id) setEditingContact(null);
-      }
+      await deleteContactDb(id);
+      setContacts((prev) => prev.filter((c) => c.id !== id));
+      if (selectedContact?.id === id) setSelectedContact(null);
+      if (editingContact?.id === id) setEditingContact(null);
     } catch { /* ignore */ }
   };
 
@@ -146,11 +159,11 @@ export default function CheckoutPage() {
     if (!editSiteForm.name.trim() || !editSiteForm.address.trim()) { alert("All fields are required."); return; }
     setSavingEdit(true);
     try {
-      const res = await fetch("/api/sites", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: editingSite.id, ...editSiteForm }) });
-      if (res.ok) {
-        const updated: Site = await res.json();
-        setSites((prev) => prev.map((s) => (s.id === updated.id ? updated : s)));
-        if (selectedSite?.id === updated.id) setSelectedSite(updated);
+      const updated = await updateSite(editingSite.id, editSiteForm);
+      if (updated) {
+        const site: Site = { id: updated.id as string, name: updated.name as string, address: updated.address as string };
+        setSites((prev) => prev.map((s) => (s.id === site.id ? site : s)));
+        if (selectedSite?.id === site.id) setSelectedSite(site);
         setEditingSite(null);
       }
     } catch { /* ignore */ }
@@ -160,12 +173,10 @@ export default function CheckoutPage() {
   const deleteSite = async (id: string) => {
     if (!confirm("Remove this site? Orders placed with this site will keep their data.")) return;
     try {
-      const res = await fetch("/api/sites", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
-      if (res.ok) {
-        setSites((prev) => prev.filter((s) => s.id !== id));
-        if (selectedSite?.id === id) setSelectedSite(null);
-        if (editingSite?.id === id) setEditingSite(null);
-      }
+      await deleteSiteDb(id);
+      setSites((prev) => prev.filter((s) => s.id !== id));
+      if (selectedSite?.id === id) setSelectedSite(null);
+      if (editingSite?.id === id) setEditingSite(null);
     } catch { /* ignore */ }
   };
 
@@ -187,11 +198,11 @@ export default function CheckoutPage() {
     if (!editPurchaserForm.name.trim() || !editPurchaserForm.email.trim()) { alert("All fields are required."); return; }
     setSavingEdit(true);
     try {
-      const res = await fetch("/api/purchasers", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: editingPurchaser.id, ...editPurchaserForm }) });
-      if (res.ok) {
-        const updated: Purchaser = await res.json();
-        setPurchasers((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
-        if (selectedPurchaser?.id === updated.id) setSelectedPurchaser(updated);
+      const updated = await updatePurchaser(editingPurchaser.id, editPurchaserForm);
+      if (updated) {
+        const purchaser: Purchaser = { id: updated.id as string, name: updated.name as string, email: updated.email as string };
+        setPurchasers((prev) => prev.map((p) => (p.id === purchaser.id ? purchaser : p)));
+        if (selectedPurchaser?.id === purchaser.id) setSelectedPurchaser(purchaser);
         setEditingPurchaser(null);
       }
     } catch { /* ignore */ }
@@ -201,12 +212,10 @@ export default function CheckoutPage() {
   const deletePurchaser = async (id: string) => {
     if (!confirm("Remove this purchaser? Orders placed with this purchaser will keep their data.")) return;
     try {
-      const res = await fetch("/api/purchasers", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
-      if (res.ok) {
-        setPurchasers((prev) => prev.filter((p) => p.id !== id));
-        if (selectedPurchaser?.id === id) setSelectedPurchaser(null);
-        if (editingPurchaser?.id === id) setEditingPurchaser(null);
-      }
+      await deletePurchaserDb(id);
+      setPurchasers((prev) => prev.filter((p) => p.id !== id));
+      if (selectedPurchaser?.id === id) setSelectedPurchaser(null);
+      if (editingPurchaser?.id === id) setEditingPurchaser(null);
     } catch { /* ignore */ }
   };
 
@@ -217,19 +226,15 @@ export default function CheckoutPage() {
     }
     setSavingPurchaser(true);
     try {
-      const res = await fetch("/api/purchasers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newPurchaser),
-      });
-      if (res.ok) {
-        const saved: Purchaser = await res.json();
+      const saved = await createPurchaser(newPurchaser);
+      if (saved) {
+        const purchaser: Purchaser = { id: saved.id as string, name: saved.name as string, email: saved.email as string };
         setPurchasers((prev) => {
-          const exists = prev.some((p) => p.id === saved.id);
-          const updated = exists ? prev : [...prev, saved].sort((a, b) => a.name.localeCompare(b.name));
+          const exists = prev.some((p) => p.id === purchaser.id);
+          const updated = exists ? prev : [...prev, purchaser].sort((a, b) => a.name.localeCompare(b.name));
           return updated;
         });
-        setSelectedPurchaser(saved);
+        setSelectedPurchaser(purchaser);
         setShowNewPurchaser(false);
         setNewPurchaser({ name: "", email: "" });
       }
@@ -244,19 +249,15 @@ export default function CheckoutPage() {
     }
     setSavingContact(true);
     try {
-      const res = await fetch("/api/contacts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newContact),
-      });
-      if (res.ok) {
-        const saved: Contact = await res.json();
+      const saved = await createContact(newContact);
+      if (saved) {
+        const contact: Contact = { id: saved.id as string, name: saved.name as string, email: saved.email as string, phone: saved.phone as string };
         setContacts((prev) => {
-          const exists = prev.some((c) => c.id === saved.id);
-          const updated = exists ? prev : [...prev, saved].sort((a, b) => a.name.localeCompare(b.name));
+          const exists = prev.some((c) => c.id === contact.id);
+          const updated = exists ? prev : [...prev, contact].sort((a, b) => a.name.localeCompare(b.name));
           return updated;
         });
-        setSelectedContact(saved);
+        setSelectedContact(contact);
         setShowNewContact(false);
         setNewContact({ name: "", email: "", phone: "" });
       }
@@ -271,19 +272,15 @@ export default function CheckoutPage() {
     }
     setSavingSite(true);
     try {
-      const res = await fetch("/api/sites", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newSite),
-      });
-      if (res.ok) {
-        const saved: Site = await res.json();
+      const saved = await createSite(newSite);
+      if (saved) {
+        const site: Site = { id: saved.id as string, name: saved.name as string, address: saved.address as string };
         setSites((prev) => {
-          const exists = prev.some((s) => s.id === saved.id);
-          const updated = exists ? prev : [...prev, saved].sort((a, b) => a.name.localeCompare(b.name));
+          const exists = prev.some((s) => s.id === site.id);
+          const updated = exists ? prev : [...prev, site].sort((a, b) => a.name.localeCompare(b.name));
           return updated;
         });
-        setSelectedSite(saved);
+        setSelectedSite(site);
         setShowNewSite(false);
         setNewSite({ name: "", address: "" });
       }
@@ -297,51 +294,37 @@ export default function CheckoutPage() {
     setSubmitting(true);
 
     try {
-      const res = await fetch("/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contactName: selectedContact.name,
-          email: selectedContact.email,
-          phone: selectedContact.phone,
-          siteName: selectedSite.name,
-          siteAddress: selectedSite.address,
-          contactId: selectedContact.id,
-          siteId: selectedSite.id,
-          purchaserName: selectedPurchaser!.name,
-          purchaserEmail: selectedPurchaser!.email,
-          purchaserId: selectedPurchaser!.id,
-          poNumber,
-          notes,
-          items: items.map((item) => ({
-            code: item.code,
-            baseCode: item.baseCode,
-            name: item.name,
-            size: item.size,
-            material: item.material,
-            description: item.description,
-            price: item.price,
-            quantity: item.quantity,
-            ...(item.customSign ? { customSign: item.customSign } : {}),
-            ...(item.customFieldValues ? { customFieldValues: item.customFieldValues } : {}),
-            ...(item.customSizeData ? { customSizeData: item.customSizeData } : {}),
-          })),
-          subtotal: totalPrice,
-          deliveryFee,
-          vat: (totalPrice + deliveryFee) * 0.2,
-          total: (totalPrice + deliveryFee) * 1.2,
-        }),
+      const result = await submitOrder({
+        contactName: selectedContact.name,
+        email: selectedContact.email,
+        phone: selectedContact.phone,
+        siteName: selectedSite.name,
+        siteAddress: selectedSite.address,
+        poNumber: poNumber || null,
+        notes: notes || null,
+        contactId: selectedContact.id,
+        siteId: selectedSite.id,
+        purchaserName: selectedPurchaser?.name || null,
+        purchaserEmail: selectedPurchaser?.email || null,
+        purchaserId: selectedPurchaser?.id || null,
+        items: items.map((i) => ({
+          code: i.code,
+          baseCode: i.baseCode,
+          name: i.name,
+          size: i.size || undefined,
+          material: i.material || undefined,
+          price: i.price,
+          quantity: i.quantity,
+          customSign: i.customSign,
+          customFieldValues: i.customFieldValues,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          customSizeData: i.customSizeData as any,
+        })),
       });
-
-      if (res.ok) {
-        const data = await res.json();
-        clearBasket();
-        router.push(`/order-confirmation?order=${data.orderNumber}`);
-      } else {
-        alert("Failed to submit order. Please try again.");
-      }
+      clearBasket();
+      router.push(`/order-confirmation?order=${result.orderNumber}`);
     } catch {
-      alert("Network error. Please check your connection and try again.");
+      alert("Failed to submit order. Please try again.");
     } finally {
       setSubmitting(false);
     }
