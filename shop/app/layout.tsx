@@ -11,6 +11,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Signage Portal Demo",
   description: "Demo procurement portal — configure your own brand to get started",
+  icons: {
+    icon: '/icon.svg',
+    apple: '/apple-icon.png',
+  },
 };
 
 export default function RootLayout({
