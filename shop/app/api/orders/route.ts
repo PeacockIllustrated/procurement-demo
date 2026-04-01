@@ -3,12 +3,13 @@ import { supabase } from "@/lib/supabase";
 import { sendOrderConfirmation, sendTeamNotification, buildNestPOEmailHtml, buildPurchaserPOEmailHtml, generateRaisePoToken } from "@/lib/email";
 import { isShopAuthed, isAdminAuthed } from "@/lib/auth";
 import { calculateDeliveryFee } from "@/lib/delivery";
+import { brand, tables } from "@/lib/brand";
 
 function generateOrderNumber(): string {
   const date = new Date();
   const datePart = date.toISOString().slice(0, 10).replace(/-/g, "");
   const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
-  return `PER-${datePart}-${rand}`;
+  return `${brand.orderPrefix}-${datePart}-${rand}`;
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -101,7 +102,7 @@ export async function POST(req: NextRequest) {
 
     // Insert order
     const { data: order, error: orderError } = await supabase
-      .from("psp_orders")
+      .from(tables.orders)
       .insert({
         order_number: orderNumber,
         status: "new",
@@ -136,12 +137,12 @@ export async function POST(req: NextRequest) {
       ...item,
     }));
 
-    const { error: itemsError } = await supabase.from("psp_order_items").insert(itemsWithOrderId);
+    const { error: itemsError } = await supabase.from(tables.orderItems).insert(itemsWithOrderId);
 
     if (itemsError) {
       console.error("Supabase items insert error:", itemsError);
       // Roll back the order so we don't leave an empty shell
-      await supabase.from("psp_orders").delete().eq("id", order.id);
+      await supabase.from(tables.orders).delete().eq("id", order.id);
       return NextResponse.json({ error: "Failed to save order items. Please try again." }, { status: 500 });
     }
 
@@ -187,7 +188,7 @@ export async function POST(req: NextRequest) {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                brand: "persimmon",
+                brand: brand.webhookBrand,
                 isPO: false,
                 hasPurchaser: !!purchaserEmail,
                 emailSubject: subject,
@@ -235,7 +236,7 @@ export async function GET() {
 
   try {
     const { data: orders, error } = await supabase
-      .from("psp_orders")
+      .from(tables.orders)
       .select("*")
       .order("created_at", { ascending: false });
 
@@ -260,7 +261,7 @@ export async function GET() {
           o.vat = vat;
           o.total = total;
           return supabase
-            .from("psp_orders")
+            .from(tables.orders)
             .update({ delivery_fee: deliveryFee, vat, total })
             .eq("id", o.id);
         })
@@ -270,7 +271,7 @@ export async function GET() {
     // Fetch items for all orders
     const orderIds = orders.map((o) => o.id);
     const { data: allItems } = await supabase
-      .from("psp_order_items")
+      .from(tables.orderItems)
       .select("*")
       .in("order_id", orderIds);
 

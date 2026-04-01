@@ -11,14 +11,15 @@ import {
   renderToBuffer,
 } from "@react-pdf/renderer";
 import type { OrderItem, OrderData } from "./email";
+import { brand } from "./brand";
 import { SIGN_TYPE_COLORS } from "./email";
 
 /* ------------------------------------------------------------------ */
 /*  Colours                                                            */
 /* ------------------------------------------------------------------ */
 const C = {
-  navy: "#00474a",
-  green: "#3db28c",
+  navy: brand.colors.navy,
+  green: brand.colors.primary,
   lightGreenBg: "#f8faf9",
   greenBorder: "#bbf7d0",
   orangeBg: "#fff7ed",

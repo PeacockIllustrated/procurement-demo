@@ -76,9 +76,9 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <h1 className="text-2xl font-bold text-persimmon-navy mb-2">Nothing to checkout</h1>
+        <h1 className="text-2xl font-bold text-brand-navy mb-2">Nothing to checkout</h1>
         <p className="text-gray-400 mb-8">Add some items to your basket first.</p>
-        <Link href="/" className="inline-block bg-persimmon-green text-white px-8 py-3 rounded-xl font-medium hover:bg-persimmon-green-dark transition">
+        <Link href="/" className="inline-block bg-brand-primary text-white px-8 py-3 rounded-xl font-medium hover:bg-brand-primary-dark transition">
           Browse Products
         </Link>
       </div>
@@ -347,25 +347,25 @@ export default function CheckoutPage() {
     }
   };
 
-  const selectClass = "w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-persimmon-green/15 focus:border-persimmon-green outline-none transition bg-white appearance-none cursor-pointer";
-  const inputClass = "w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-persimmon-green/15 focus:border-persimmon-green outline-none transition bg-white";
+  const selectClass = "w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-primary/15 focus:border-brand-primary outline-none transition bg-white appearance-none cursor-pointer";
+  const inputClass = "w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-primary/15 focus:border-brand-primary outline-none transition bg-white";
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <Link href="/basket" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-persimmon-green transition mb-4">
+      <Link href="/basket" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-primary transition mb-4">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
         Back to basket
       </Link>
-      <h1 className="text-2xl font-bold text-persimmon-navy mb-6">Checkout</h1>
+      <h1 className="text-2xl font-bold text-brand-navy mb-6">Checkout</h1>
 
       <form onSubmit={handleSubmit} className="grid md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-6 min-w-0">
 
           {/* Contact section */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <h2 className="text-base font-semibold text-persimmon-navy mb-5">Contact Details <span className="text-red-400">*</span></h2>
+            <h2 className="text-base font-semibold text-brand-navy mb-5">Contact Details <span className="text-red-400">*</span></h2>
             <select value={selectedContact?.id || (showNewContact ? "__new__" : "")} onChange={handleContactSelect} className={selectClass}>
               <option value="" disabled>Select a contact...</option>
               {contacts.map((c) => (
@@ -384,8 +384,8 @@ export default function CheckoutPage() {
             )}
 
             {showNewContact && (
-              <div className="mt-4 border-2 border-dashed border-persimmon-green rounded-xl p-4 bg-emerald-50/30">
-                <p className="text-sm font-semibold text-persimmon-navy mb-3">New Contact</p>
+              <div className="mt-4 border-2 border-dashed border-brand-primary rounded-xl p-4 bg-emerald-50/30">
+                <p className="text-sm font-semibold text-brand-navy mb-3">New Contact</p>
                 <div className="grid sm:grid-cols-3 gap-3">
                   <input type="text" placeholder="Name *" value={newContact.name} onChange={(e) => setNewContact((p) => ({ ...p, name: e.target.value }))} className={inputClass} />
                   <input type="email" placeholder="Email *" value={newContact.email} onChange={(e) => setNewContact((p) => ({ ...p, email: e.target.value }))} className={inputClass} />
@@ -393,7 +393,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-end gap-2 mt-3">
                   <button type="button" onClick={() => { setShowNewContact(false); setNewContact({ name: "", email: "", phone: "" }); }} className="px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition">Cancel</button>
-                  <button type="button" onClick={saveNewContact} disabled={savingContact} className="px-4 py-2 text-sm text-white bg-persimmon-green rounded-lg font-medium hover:bg-persimmon-green-dark transition disabled:opacity-50">{savingContact ? "Saving..." : "Save Contact"}</button>
+                  <button type="button" onClick={saveNewContact} disabled={savingContact} className="px-4 py-2 text-sm text-white bg-brand-primary rounded-lg font-medium hover:bg-brand-primary-dark transition disabled:opacity-50">{savingContact ? "Saving..." : "Save Contact"}</button>
                 </div>
               </div>
             )}
@@ -401,7 +401,7 @@ export default function CheckoutPage() {
 
           {/* Site section */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <h2 className="text-base font-semibold text-persimmon-navy mb-5">Site Details <span className="text-red-400">*</span></h2>
+            <h2 className="text-base font-semibold text-brand-navy mb-5">Site Details <span className="text-red-400">*</span></h2>
             <select value={selectedSite?.id || (showNewSite ? "__new__" : "")} onChange={handleSiteSelect} className={selectClass}>
               <option value="" disabled>Select a site...</option>
               {sites.map((s) => (
@@ -419,15 +419,15 @@ export default function CheckoutPage() {
             )}
 
             {showNewSite && (
-              <div className="mt-4 border-2 border-dashed border-persimmon-green rounded-xl p-4 bg-emerald-50/30">
-                <p className="text-sm font-semibold text-persimmon-navy mb-3">New Site</p>
+              <div className="mt-4 border-2 border-dashed border-brand-primary rounded-xl p-4 bg-emerald-50/30">
+                <p className="text-sm font-semibold text-brand-navy mb-3">New Site</p>
                 <div className="space-y-3">
                   <input type="text" placeholder="Site Name *" value={newSite.name} onChange={(e) => setNewSite((p) => ({ ...p, name: e.target.value }))} className={inputClass} />
                   <textarea placeholder="Site Address *" value={newSite.address} onChange={(e) => setNewSite((p) => ({ ...p, address: e.target.value }))} rows={2} className={inputClass} />
                 </div>
                 <div className="flex justify-end gap-2 mt-3">
                   <button type="button" onClick={() => { setShowNewSite(false); setNewSite({ name: "", address: "" }); }} className="px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition">Cancel</button>
-                  <button type="button" onClick={saveNewSite} disabled={savingSite} className="px-4 py-2 text-sm text-white bg-persimmon-green rounded-lg font-medium hover:bg-persimmon-green-dark transition disabled:opacity-50">{savingSite ? "Saving..." : "Save Site"}</button>
+                  <button type="button" onClick={saveNewSite} disabled={savingSite} className="px-4 py-2 text-sm text-white bg-brand-primary rounded-lg font-medium hover:bg-brand-primary-dark transition disabled:opacity-50">{savingSite ? "Saving..." : "Save Site"}</button>
                 </div>
               </div>
             )}
@@ -435,7 +435,7 @@ export default function CheckoutPage() {
 
           {/* Purchaser section */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <h2 className="text-base font-semibold text-persimmon-navy mb-1">Purchaser <span className="text-red-400">*</span></h2>
+            <h2 className="text-base font-semibold text-brand-navy mb-1">Purchaser <span className="text-red-400">*</span></h2>
             <p className="text-xs text-gray-400 mb-4">The person responsible for raising the purchase order.</p>
             <select value={selectedPurchaser?.id || (showNewPurchaser ? "__new__" : "")} onChange={handlePurchaserSelect} className={selectClass}>
               <option value="" disabled>Select a purchaser...</option>
@@ -454,15 +454,15 @@ export default function CheckoutPage() {
             )}
 
             {showNewPurchaser && (
-              <div className="mt-4 border-2 border-dashed border-persimmon-green rounded-xl p-4 bg-emerald-50/30">
-                <p className="text-sm font-semibold text-persimmon-navy mb-3">New Purchaser</p>
+              <div className="mt-4 border-2 border-dashed border-brand-primary rounded-xl p-4 bg-emerald-50/30">
+                <p className="text-sm font-semibold text-brand-navy mb-3">New Purchaser</p>
                 <div className="grid sm:grid-cols-2 gap-3">
                   <input type="text" placeholder="Name *" value={newPurchaser.name} onChange={(e) => setNewPurchaser((p) => ({ ...p, name: e.target.value }))} className={inputClass} />
                   <input type="email" placeholder="Email *" value={newPurchaser.email} onChange={(e) => setNewPurchaser((p) => ({ ...p, email: e.target.value }))} className={inputClass} />
                 </div>
                 <div className="flex justify-end gap-2 mt-3">
                   <button type="button" onClick={() => { setShowNewPurchaser(false); setNewPurchaser({ name: "", email: "" }); }} className="px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition">Cancel</button>
-                  <button type="button" onClick={saveNewPurchaser} disabled={savingPurchaser} className="px-4 py-2 text-sm text-white bg-persimmon-green rounded-lg font-medium hover:bg-persimmon-green-dark transition disabled:opacity-50">{savingPurchaser ? "Saving..." : "Save Purchaser"}</button>
+                  <button type="button" onClick={saveNewPurchaser} disabled={savingPurchaser} className="px-4 py-2 text-sm text-white bg-brand-primary rounded-lg font-medium hover:bg-brand-primary-dark transition disabled:opacity-50">{savingPurchaser ? "Saving..." : "Save Purchaser"}</button>
                 </div>
               </div>
             )}
@@ -470,7 +470,7 @@ export default function CheckoutPage() {
 
           {/* PO Number & Notes */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <h2 className="text-base font-semibold text-persimmon-navy mb-5">Order Details</h2>
+            <h2 className="text-base font-semibold text-brand-navy mb-5">Order Details</h2>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1.5">PO Number</label>
@@ -487,7 +487,7 @@ export default function CheckoutPage() {
         {/* Order summary sidebar */}
         <div className="min-w-0">
           <div className="bg-white rounded-2xl border border-gray-100 p-6 sticky top-24">
-            <h2 className="text-base font-semibold text-persimmon-navy mb-4">Order Summary</h2>
+            <h2 className="text-base font-semibold text-brand-navy mb-4">Order Summary</h2>
 
             <div className="space-y-2.5 mb-4 max-h-60 overflow-y-auto">
               {items.map((item) => (
@@ -507,7 +507,7 @@ export default function CheckoutPage() {
                   {item.customFieldValues && item.customFieldValues.length > 0 && (
                     <div className="ml-1 mt-0.5">
                       {item.customFieldValues.map((f) => (
-                        <p key={f.key} className="text-[11px] text-persimmon-green truncate">
+                        <p key={f.key} className="text-[11px] text-brand-primary truncate">
                           {f.label}: <span className="text-gray-400">{f.value}</span>
                         </p>
                       ))}
@@ -527,14 +527,14 @@ export default function CheckoutPage() {
                 {deliveryFee > 0 ? (
                   <span>{"\u00A3"}{deliveryFee.toFixed(2)}</span>
                 ) : (
-                  <span className="text-persimmon-green font-medium">FREE</span>
+                  <span className="text-brand-primary font-medium">FREE</span>
                 )}
               </div>
               <div className="flex justify-between text-sm text-gray-400">
                 <span>VAT (20%)</span>
                 <span>{"\u00A3"}{((totalPrice + deliveryFee) * 0.2).toFixed(2)}</span>
               </div>
-              <div className="flex justify-between font-bold text-persimmon-navy pt-2 border-t border-gray-100">
+              <div className="flex justify-between font-bold text-brand-navy pt-2 border-t border-gray-100">
                 <span>Total</span>
                 <span>{"\u00A3"}{((totalPrice + deliveryFee) * 1.2).toFixed(2)}</span>
               </div>
@@ -543,7 +543,7 @@ export default function CheckoutPage() {
             <button
               type="submit"
               disabled={!canSubmit}
-              className="w-full mt-6 bg-persimmon-green text-white py-3 rounded-xl font-medium hover:bg-persimmon-green-dark transition disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
+              className="w-full mt-6 bg-brand-primary text-white py-3 rounded-xl font-medium hover:bg-brand-primary-dark transition disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
             >
               {submitting ? "Submitting Order..." : "Submit Order"}
             </button>
@@ -572,7 +572,7 @@ export default function CheckoutPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={() => { setManageContacts(false); setEditingContact(null); }}>
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[80vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
-              <h2 className="text-lg font-bold text-persimmon-navy">Manage Contacts</h2>
+              <h2 className="text-lg font-bold text-brand-navy">Manage Contacts</h2>
               <button onClick={() => { setManageContacts(false); setEditingContact(null); }} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition text-gray-500">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
@@ -585,7 +585,7 @@ export default function CheckoutPage() {
                   {contacts.map((c) => (
                     <div key={c.id}>
                       {editingContact?.id === c.id ? (
-                        <div className="border-2 border-persimmon-green rounded-xl p-4 bg-emerald-50/30">
+                        <div className="border-2 border-brand-primary rounded-xl p-4 bg-emerald-50/30">
                           <div className="grid sm:grid-cols-3 gap-3 mb-3">
                             <input type="text" value={editContactForm.name} onChange={(e) => setEditContactForm((p) => ({ ...p, name: e.target.value }))} placeholder="Name" className={inputClass} />
                             <input type="email" value={editContactForm.email} onChange={(e) => setEditContactForm((p) => ({ ...p, email: e.target.value }))} placeholder="Email" className={inputClass} />
@@ -593,17 +593,17 @@ export default function CheckoutPage() {
                           </div>
                           <div className="flex justify-end gap-2">
                             <button type="button" onClick={() => setEditingContact(null)} className="px-3 py-1.5 text-sm text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition">Cancel</button>
-                            <button type="button" onClick={saveEditContact} disabled={savingEdit} className="px-3 py-1.5 text-sm text-white bg-persimmon-green rounded-lg font-medium hover:bg-persimmon-green-dark transition disabled:opacity-50">{savingEdit ? "Saving..." : "Save"}</button>
+                            <button type="button" onClick={saveEditContact} disabled={savingEdit} className="px-3 py-1.5 text-sm text-white bg-brand-primary rounded-lg font-medium hover:bg-brand-primary-dark transition disabled:opacity-50">{savingEdit ? "Saving..." : "Save"}</button>
                           </div>
                         </div>
                       ) : (
                         <div className="flex items-center justify-between border border-gray-100 rounded-xl p-4 hover:border-gray-200 transition">
                           <div className="min-w-0">
-                            <p className="text-sm font-medium text-persimmon-navy">{c.name}</p>
+                            <p className="text-sm font-medium text-brand-navy">{c.name}</p>
                             <p className="text-xs text-gray-400 truncate">{c.email} · {c.phone}</p>
                           </div>
                           <div className="flex items-center gap-1.5 shrink-0 ml-3">
-                            <button type="button" onClick={() => startEditContact(c)} className="px-2.5 py-1 text-xs text-persimmon-green border border-persimmon-green/30 rounded-lg hover:bg-persimmon-green/5 transition">Edit</button>
+                            <button type="button" onClick={() => startEditContact(c)} className="px-2.5 py-1 text-xs text-brand-primary border border-brand-primary/30 rounded-lg hover:bg-brand-primary/5 transition">Edit</button>
                             <button type="button" onClick={() => deleteContact(c.id)} className="px-2.5 py-1 text-xs text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition">Remove</button>
                           </div>
                         </div>
@@ -622,7 +622,7 @@ export default function CheckoutPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={() => { setManageSites(false); setEditingSite(null); }}>
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[80vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
-              <h2 className="text-lg font-bold text-persimmon-navy">Manage Sites</h2>
+              <h2 className="text-lg font-bold text-brand-navy">Manage Sites</h2>
               <button onClick={() => { setManageSites(false); setEditingSite(null); }} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition text-gray-500">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
@@ -635,24 +635,24 @@ export default function CheckoutPage() {
                   {sites.map((s) => (
                     <div key={s.id}>
                       {editingSite?.id === s.id ? (
-                        <div className="border-2 border-persimmon-green rounded-xl p-4 bg-emerald-50/30">
+                        <div className="border-2 border-brand-primary rounded-xl p-4 bg-emerald-50/30">
                           <div className="space-y-3 mb-3">
                             <input type="text" value={editSiteForm.name} onChange={(e) => setEditSiteForm((p) => ({ ...p, name: e.target.value }))} placeholder="Site Name" className={inputClass} />
                             <textarea value={editSiteForm.address} onChange={(e) => setEditSiteForm((p) => ({ ...p, address: e.target.value }))} placeholder="Site Address" rows={2} className={inputClass} />
                           </div>
                           <div className="flex justify-end gap-2">
                             <button type="button" onClick={() => setEditingSite(null)} className="px-3 py-1.5 text-sm text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition">Cancel</button>
-                            <button type="button" onClick={saveEditSite} disabled={savingEdit} className="px-3 py-1.5 text-sm text-white bg-persimmon-green rounded-lg font-medium hover:bg-persimmon-green-dark transition disabled:opacity-50">{savingEdit ? "Saving..." : "Save"}</button>
+                            <button type="button" onClick={saveEditSite} disabled={savingEdit} className="px-3 py-1.5 text-sm text-white bg-brand-primary rounded-lg font-medium hover:bg-brand-primary-dark transition disabled:opacity-50">{savingEdit ? "Saving..." : "Save"}</button>
                           </div>
                         </div>
                       ) : (
                         <div className="flex items-center justify-between border border-gray-100 rounded-xl p-4 hover:border-gray-200 transition">
                           <div className="min-w-0">
-                            <p className="text-sm font-medium text-persimmon-navy">{s.name}</p>
+                            <p className="text-sm font-medium text-brand-navy">{s.name}</p>
                             <p className="text-xs text-gray-400 truncate">{s.address}</p>
                           </div>
                           <div className="flex items-center gap-1.5 shrink-0 ml-3">
-                            <button type="button" onClick={() => startEditSite(s)} className="px-2.5 py-1 text-xs text-persimmon-green border border-persimmon-green/30 rounded-lg hover:bg-persimmon-green/5 transition">Edit</button>
+                            <button type="button" onClick={() => startEditSite(s)} className="px-2.5 py-1 text-xs text-brand-primary border border-brand-primary/30 rounded-lg hover:bg-brand-primary/5 transition">Edit</button>
                             <button type="button" onClick={() => deleteSite(s.id)} className="px-2.5 py-1 text-xs text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition">Remove</button>
                           </div>
                         </div>
@@ -670,7 +670,7 @@ export default function CheckoutPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={() => { setManagePurchasers(false); setEditingPurchaser(null); }}>
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[80vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
-              <h2 className="text-lg font-bold text-persimmon-navy">Manage Purchasers</h2>
+              <h2 className="text-lg font-bold text-brand-navy">Manage Purchasers</h2>
               <button onClick={() => { setManagePurchasers(false); setEditingPurchaser(null); }} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition text-gray-500">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
@@ -683,24 +683,24 @@ export default function CheckoutPage() {
                   {purchasers.map((p) => (
                     <div key={p.id}>
                       {editingPurchaser?.id === p.id ? (
-                        <div className="border-2 border-persimmon-green rounded-xl p-4 bg-emerald-50/30">
+                        <div className="border-2 border-brand-primary rounded-xl p-4 bg-emerald-50/30">
                           <div className="grid sm:grid-cols-2 gap-3 mb-3">
                             <input type="text" value={editPurchaserForm.name} onChange={(e) => setEditPurchaserForm((prev) => ({ ...prev, name: e.target.value }))} placeholder="Name" className={inputClass} />
                             <input type="email" value={editPurchaserForm.email} onChange={(e) => setEditPurchaserForm((prev) => ({ ...prev, email: e.target.value }))} placeholder="Email" className={inputClass} />
                           </div>
                           <div className="flex justify-end gap-2">
                             <button type="button" onClick={() => setEditingPurchaser(null)} className="px-3 py-1.5 text-sm text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition">Cancel</button>
-                            <button type="button" onClick={saveEditPurchaser} disabled={savingEdit} className="px-3 py-1.5 text-sm text-white bg-persimmon-green rounded-lg font-medium hover:bg-persimmon-green-dark transition disabled:opacity-50">{savingEdit ? "Saving..." : "Save"}</button>
+                            <button type="button" onClick={saveEditPurchaser} disabled={savingEdit} className="px-3 py-1.5 text-sm text-white bg-brand-primary rounded-lg font-medium hover:bg-brand-primary-dark transition disabled:opacity-50">{savingEdit ? "Saving..." : "Save"}</button>
                           </div>
                         </div>
                       ) : (
                         <div className="flex items-center justify-between border border-gray-100 rounded-xl p-4 hover:border-gray-200 transition">
                           <div className="min-w-0">
-                            <p className="text-sm font-medium text-persimmon-navy">{p.name}</p>
+                            <p className="text-sm font-medium text-brand-navy">{p.name}</p>
                             <p className="text-xs text-gray-400 truncate">{p.email}</p>
                           </div>
                           <div className="flex items-center gap-1.5 shrink-0 ml-3">
-                            <button type="button" onClick={() => startEditPurchaser(p)} className="px-2.5 py-1 text-xs text-persimmon-green border border-persimmon-green/30 rounded-lg hover:bg-persimmon-green/5 transition">Edit</button>
+                            <button type="button" onClick={() => startEditPurchaser(p)} className="px-2.5 py-1 text-xs text-brand-primary border border-brand-primary/30 rounded-lg hover:bg-brand-primary/5 transition">Edit</button>
                             <button type="button" onClick={() => deletePurchaser(p.id)} className="px-2.5 py-1 text-xs text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition">Remove</button>
                           </div>
                         </div>

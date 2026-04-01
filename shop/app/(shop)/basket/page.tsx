@@ -10,16 +10,16 @@ export default function BasketPage() {
   if (items.length === 0) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <div className="w-20 h-20 bg-persimmon-gray rounded-full flex items-center justify-center mx-auto mb-6">
+        <div className="w-20 h-20 bg-brand-gray rounded-full flex items-center justify-center mx-auto mb-6">
           <svg className="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
           </svg>
         </div>
-        <h1 className="text-2xl font-bold text-persimmon-navy mb-2">Your basket is empty</h1>
+        <h1 className="text-2xl font-bold text-brand-navy mb-2">Your basket is empty</h1>
         <p className="text-gray-400 mb-8">Browse our signage range and add items to get started.</p>
         <Link
           href="/"
-          className="inline-block bg-persimmon-green text-white px-8 py-3 rounded-xl font-medium hover:bg-persimmon-green-dark transition"
+          className="inline-block bg-brand-primary text-white px-8 py-3 rounded-xl font-medium hover:bg-brand-primary-dark transition"
         >
           Browse Products
         </Link>
@@ -29,7 +29,7 @@ export default function BasketPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-persimmon-navy mb-6">Your Basket</h1>
+      <h1 className="text-2xl font-bold text-brand-navy mb-6">Your Basket</h1>
 
       <div className="space-y-3">
         {items.map((item) => (
@@ -37,7 +37,7 @@ export default function BasketPage() {
             key={item.code}
             className="flex gap-4 bg-white rounded-2xl border border-gray-100 p-5 hover:border-gray-200 transition"
           >
-            <div className="w-20 h-20 bg-persimmon-gray rounded-xl shrink-0 flex items-center justify-center overflow-hidden">
+            <div className="w-20 h-20 bg-brand-gray rounded-xl shrink-0 flex items-center justify-center overflow-hidden">
               {item.image ? (
                 <Image
                   src={item.image}
@@ -60,7 +60,7 @@ export default function BasketPage() {
               {item.customFieldValues && item.customFieldValues.length > 0 && (
                 <div className="mt-1 space-y-0.5">
                   {item.customFieldValues.map((f) => (
-                    <p key={f.key} className="text-xs text-persimmon-green">
+                    <p key={f.key} className="text-xs text-brand-primary">
                       {f.label}: <span className="text-gray-600">{f.value}</span>
                     </p>
                   ))}
@@ -77,7 +77,7 @@ export default function BasketPage() {
               {item.customSign || item.customSizeData?.requiresQuote ? (
                 <p className="text-amber-600 font-semibold mt-1.5 text-sm">Quote on request</p>
               ) : (
-                <p className="text-persimmon-navy font-semibold mt-1.5 text-sm">
+                <p className="text-brand-navy font-semibold mt-1.5 text-sm">
                   {"\u00A3"}{item.price.toFixed(2)} each
                 </p>
               )}
@@ -93,19 +93,19 @@ export default function BasketPage() {
                 </svg>
               </button>
 
-              <div className="flex items-center bg-persimmon-gray rounded-lg overflow-hidden">
+              <div className="flex items-center bg-brand-gray rounded-lg overflow-hidden">
                 <button
                   onClick={() => updateQuantity(item.code, item.quantity - 1)}
-                  className="px-2.5 py-1.5 hover:bg-persimmon-gray-dark text-sm text-gray-500 transition"
+                  className="px-2.5 py-1.5 hover:bg-brand-gray-dark text-sm text-gray-500 transition"
                 >
                   -
                 </button>
-                <span className="px-3 py-1.5 text-sm font-medium text-persimmon-navy">
+                <span className="px-3 py-1.5 text-sm font-medium text-brand-navy">
                   {item.quantity}
                 </span>
                 <button
                   onClick={() => updateQuantity(item.code, item.quantity + 1)}
-                  className="px-2.5 py-1.5 hover:bg-persimmon-gray-dark text-sm text-gray-500 transition"
+                  className="px-2.5 py-1.5 hover:bg-brand-gray-dark text-sm text-gray-500 transition"
                 >
                   +
                 </button>
@@ -114,7 +114,7 @@ export default function BasketPage() {
               {item.customSign || item.customSizeData?.requiresQuote ? (
                 <p className="font-bold text-amber-600 text-xs">Quote</p>
               ) : (
-                <p className="font-bold text-persimmon-navy text-sm">
+                <p className="font-bold text-brand-navy text-sm">
                   {"\u00A3"}{(item.price * item.quantity).toFixed(2)}
                 </p>
               )}
@@ -136,7 +136,7 @@ export default function BasketPage() {
                 Spend {"\u00A3"}{remaining.toFixed(2)} more to get free delivery!
               </p>
               <p className="text-xs text-amber-600 mt-0.5">Free delivery on all orders over {"\u00A3"}100.</p>
-              <Link href="/" className="inline-block mt-2 text-xs font-semibold text-persimmon-green hover:underline">
+              <Link href="/" className="inline-block mt-2 text-xs font-semibold text-brand-primary hover:underline">
                 Continue shopping &rarr;
               </Link>
             </div>
@@ -156,7 +156,7 @@ export default function BasketPage() {
       <div className="mt-4 bg-white rounded-2xl border border-gray-100 p-6">
         <div className="flex justify-between items-center mb-3">
           <span className="text-gray-500">Subtotal (ex. VAT)</span>
-          <span className="text-xl font-bold text-persimmon-navy">
+          <span className="text-xl font-bold text-brand-navy">
             {"\u00A3"}{totalPrice.toFixed(2)}
           </span>
         </div>
@@ -165,7 +165,7 @@ export default function BasketPage() {
           {deliveryFee > 0 ? (
             <span className="text-gray-700">{"\u00A3"}{deliveryFee.toFixed(2)}</span>
           ) : (
-            <span className="text-persimmon-green font-medium">FREE</span>
+            <span className="text-brand-primary font-medium">FREE</span>
           )}
         </div>
         <div className="flex justify-between items-center mb-4 text-sm text-gray-400">
@@ -173,8 +173,8 @@ export default function BasketPage() {
           <span>{"\u00A3"}{((totalPrice + deliveryFee) * 0.2).toFixed(2)}</span>
         </div>
         <div className="flex justify-between items-center mb-6 border-t border-gray-100 pt-4">
-          <span className="text-lg font-bold text-persimmon-navy">Total (inc. VAT)</span>
-          <span className="text-2xl font-bold text-persimmon-green">
+          <span className="text-lg font-bold text-brand-navy">Total (inc. VAT)</span>
+          <span className="text-2xl font-bold text-brand-primary">
             {"\u00A3"}{((totalPrice + deliveryFee) * 1.2).toFixed(2)}
           </span>
         </div>
@@ -194,7 +194,7 @@ export default function BasketPage() {
           </Link>
           <Link
             href="/checkout"
-            className="flex-1 bg-persimmon-green text-white px-6 py-3 rounded-xl font-medium hover:bg-persimmon-green-dark transition text-center"
+            className="flex-1 bg-brand-primary text-white px-6 py-3 rounded-xl font-medium hover:bg-brand-primary-dark transition text-center"
           >
             Proceed to Checkout
           </Link>

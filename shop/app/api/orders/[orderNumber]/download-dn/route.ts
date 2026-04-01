@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { tables } from "@/lib/brand";
 import { supabase } from "@/lib/supabase";
 import { isShopAuthed, isAdminAuthed } from "@/lib/auth";
 
@@ -14,7 +15,7 @@ export async function GET(
     const { orderNumber } = await params;
 
     const { data: order, error } = await supabase
-      .from("psp_orders")
+      .from(tables.orders)
       .select("dn_document_name, dn_document_data, dn_document_type")
       .eq("order_number", orderNumber)
       .single();

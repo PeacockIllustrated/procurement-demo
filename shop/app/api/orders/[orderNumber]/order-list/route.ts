@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { tables } from "@/lib/brand";
 import { supabase } from "@/lib/supabase";
 import { isAdminAuthed } from "@/lib/auth";
 import { generateOrderListPdf } from "@/lib/order-list-pdf";
@@ -15,7 +16,7 @@ export async function GET(
     const { orderNumber } = await params;
 
     const { data: order, error: orderError } = await supabase
-      .from("psp_orders")
+      .from(tables.orders)
       .select("*")
       .eq("order_number", orderNumber)
       .single();
@@ -25,7 +26,7 @@ export async function GET(
     }
 
     const { data: items } = await supabase
-      .from("psp_order_items")
+      .from(tables.orderItems)
       .select("*")
       .eq("order_id", order.id);
 

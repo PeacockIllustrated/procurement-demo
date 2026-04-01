@@ -107,7 +107,7 @@ export default function CustomSizeSection({ product, category }: Props) {
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between px-5 py-4 bg-white hover:bg-gray-50 transition"
       >
-        <span className="text-sm font-semibold text-persimmon-navy">
+        <span className="text-sm font-semibold text-brand-navy">
           Need a custom size?
         </span>
         <svg
@@ -144,7 +144,7 @@ export default function CustomSizeSection({ product, category }: Props) {
                 placeholder="e.g. 350"
                 min={MIN_CUSTOM_SIZE_MM}
                 max={MAX_CUSTOM_SIZE_MM}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-persimmon-green/15 focus:border-persimmon-green outline-none transition bg-white"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-primary/15 focus:border-brand-primary outline-none transition bg-white"
               />
             </div>
             <span className="text-gray-300 mt-5">&times;</span>
@@ -159,7 +159,7 @@ export default function CustomSizeSection({ product, category }: Props) {
                 placeholder="e.g. 500"
                 min={MIN_CUSTOM_SIZE_MM}
                 max={MAX_CUSTOM_SIZE_MM}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-persimmon-green/15 focus:border-persimmon-green outline-none transition bg-white"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-primary/15 focus:border-brand-primary outline-none transition bg-white"
               />
             </div>
           </div>
@@ -194,7 +194,7 @@ export default function CustomSizeSection({ product, category }: Props) {
                       }))
                     }
                     placeholder={`Enter ${field.label.toLowerCase()}`}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-persimmon-green/15 focus:border-persimmon-green outline-none transition bg-white"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-primary/15 focus:border-brand-primary outline-none transition bg-white"
                   />
                 </div>
               ))}
@@ -221,7 +221,7 @@ export default function CustomSizeSection({ product, category }: Props) {
                     </p>
                   ) : (
                     <>
-                      <p className="text-2xl font-bold text-persimmon-navy mt-1">
+                      <p className="text-2xl font-bold text-brand-navy mt-1">
                         {"\u00A3"}
                         {result.matchedVariant!.price.toFixed(2)}
                       </p>
@@ -241,12 +241,12 @@ export default function CustomSizeSection({ product, category }: Props) {
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="flex items-center bg-persimmon-gray rounded-xl overflow-hidden">
+                <div className="flex items-center bg-brand-gray rounded-xl overflow-hidden">
                   <button
                     onClick={() =>
                       setQty(result.material, getQty(result.material) - 1)
                     }
-                    className="px-3 py-2.5 hover:bg-persimmon-gray-dark text-gray-500 font-medium transition"
+                    className="px-3 py-2.5 hover:bg-brand-gray-dark text-gray-500 font-medium transition"
                   >
                     -
                   </button>
@@ -259,14 +259,14 @@ export default function CustomSizeSection({ product, category }: Props) {
                         Math.max(1, parseInt(e.target.value) || 1)
                       )
                     }
-                    className="w-12 text-center py-2.5 bg-transparent text-sm font-medium text-persimmon-navy"
+                    className="w-12 text-center py-2.5 bg-transparent text-sm font-medium text-brand-navy"
                     min={1}
                   />
                   <button
                     onClick={() =>
                       setQty(result.material, getQty(result.material) + 1)
                     }
-                    className="px-3 py-2.5 hover:bg-persimmon-gray-dark text-gray-500 font-medium transition"
+                    className="px-3 py-2.5 hover:bg-brand-gray-dark text-gray-500 font-medium transition"
                   >
                     +
                   </button>
@@ -277,7 +277,7 @@ export default function CustomSizeSection({ product, category }: Props) {
                   className={`flex-1 py-2.5 px-6 rounded-xl font-medium transition-all text-white flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 ${
                     result.requiresQuote
                       ? "bg-amber-500 hover:bg-amber-600"
-                      : "bg-persimmon-green hover:bg-persimmon-green-dark"
+                      : "bg-brand-primary hover:bg-brand-primary-dark"
                   }`}
                 >
                   <svg

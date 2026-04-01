@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { brand } from "@/lib/brand";
 import "./globals.css";
 
 const inter = Inter({
@@ -8,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Persimmon Signage Portal",
-  description: "Order construction signage for your Persimmon development",
+  title: brand.fullTitle,
+  description: brand.description,
 };
 
 export default function RootLayout({

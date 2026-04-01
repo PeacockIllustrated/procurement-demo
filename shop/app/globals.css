@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --persimmon-green: #3db28c;
-  --persimmon-green-light: #5ac4a1;
-  --persimmon-green-dark: #007961;
-  --persimmon-navy: #00474a;
-  --persimmon-navy-light: #006266;
-  --persimmon-gray: #F4F6F8;
-  --persimmon-gray-dark: #E2E6EA;
+  --brand-primary: #007B86;
+  --brand-primary-light: #1A9AA5;
+  --brand-primary-dark: #005F68;
+  --brand-navy: #1A1A1A;
+  --brand-navy-light: #333333;
+  --brand-gray: #F4F6F8;
+  --brand-gray-dark: #E2E6EA;
   --background: #F8FAFB;
   --foreground: #1A1D21;
 }
@@ -15,13 +15,13 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-persimmon-green: var(--persimmon-green);
-  --color-persimmon-green-light: var(--persimmon-green-light);
-  --color-persimmon-green-dark: var(--persimmon-green-dark);
-  --color-persimmon-navy: var(--persimmon-navy);
-  --color-persimmon-navy-light: var(--persimmon-navy-light);
-  --color-persimmon-gray: var(--persimmon-gray);
-  --color-persimmon-gray-dark: var(--persimmon-gray-dark);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-light: var(--brand-primary-light);
+  --color-brand-primary-dark: var(--brand-primary-dark);
+  --color-brand-navy: var(--brand-navy);
+  --color-brand-navy-light: var(--brand-navy-light);
+  --color-brand-gray: var(--brand-gray);
+  --color-brand-gray-dark: var(--brand-gray-dark);
   --font-sans: var(--font-inter);
 }
 

@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { brand } from "./brand";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.office365.com",
@@ -91,10 +92,10 @@ function emailHeaderHtml(title: string, siteUrl: string): string {
   return `
     <table width="100%" cellpadding="0" cellspacing="0" style="border-radius:12px 12px 0 0;overflow:hidden">
       <tr>
-        <td style="background:#00474a;padding:24px 32px">
+        <td style="background:${brand.colors.navy};padding:24px 32px">
           <table width="100%" cellpadding="0" cellspacing="0"><tr>
             <td style="vertical-align:middle">
-              <img src="${siteUrl}/images/onesign-logo-white.png" alt="Onesign" height="30" style="display:block" />
+              <img src="${siteUrl}/assets/wordmark.svg" alt="${brand.name}" height="30" style="display:block" />
             </td>
             <td style="vertical-align:middle;text-align:right">
               <span style="color:white;font-size:18px;font-weight:bold;letter-spacing:0.5px">${title}</span>
@@ -103,11 +104,11 @@ function emailHeaderHtml(title: string, siteUrl: string): string {
         </td>
       </tr>
       <tr>
-        <td style="background:#3db28c;height:3px;font-size:1px;line-height:1px">&nbsp;</td>
+        <td style="background:${brand.colors.primary};height:3px;font-size:1px;line-height:1px">&nbsp;</td>
       </tr>
       <tr>
         <td style="padding:8px 32px;text-align:center;font-size:11px;color:#999;border-left:1px solid #eee;border-right:1px solid #eee">
-          Onesign and Digital &nbsp;&middot;&nbsp; D86 Princesway, Gateshead NE11 0TU &nbsp;&middot;&nbsp; 0191 487 6767
+          ${brand.email.companyName} &nbsp;&middot;&nbsp; ${brand.email.companyAddress} &nbsp;&middot;&nbsp; ${brand.email.companyPhone}
         </td>
       </tr>
     </table>`;
@@ -142,7 +143,7 @@ function itemRowsHtml(items: OrderItem[], siteUrl?: string): string {
       const imgCode = (item.base_code || item.code.replace(/\/.*$/, "")).replace(/\//g, "_");
       const customFieldsHtml = item.custom_data?.fields
         ? (item.custom_data.fields as Array<{ label: string; key: string; value: string }>)
-            .map((f) => `<br/><span style="color:#00474a;font-size:11px">${esc(f.label)}: <span style="color:#666">${esc(f.value)}</span></span>`)
+            .map((f) => `<br/><span style="color:${brand.colors.navy};font-size:11px">${esc(f.label)}: <span style="color:#666">${esc(f.value)}</span></span>`)
             .join("")
         : "";
       return `
@@ -169,15 +170,15 @@ function totalsHtml(subtotal: number, deliveryFee: number, vat: number, total: n
     </tr>
     <tr>
       <td colspan="3" style="padding:8px 12px;text-align:right;font-size:14px;color:#666">Delivery</td>
-      <td style="padding:8px 12px 8px 8px;text-align:right;font-size:14px">${deliveryFee > 0 ? `&pound;${deliveryFee.toFixed(2)}` : `<span style="color:#3db28c;font-weight:bold">FREE</span>`}</td>
+      <td style="padding:8px 12px 8px 8px;text-align:right;font-size:14px">${deliveryFee > 0 ? `&pound;${deliveryFee.toFixed(2)}` : `<span style="color:${brand.colors.primary};font-weight:bold">FREE</span>`}</td>
     </tr>
     <tr>
       <td colspan="3" style="padding:8px 12px;text-align:right;font-size:14px;color:#666">VAT (20%)</td>
       <td style="padding:8px 12px 8px 8px;text-align:right;font-size:14px">&pound;${vat.toFixed(2)}</td>
     </tr>
     <tr>
-      <td colspan="3" style="padding:8px 12px;text-align:right;font-weight:bold;font-size:14px;color:#00474a">Total</td>
-      <td style="padding:8px 12px 8px 8px;text-align:right;font-weight:bold;font-size:14px;color:#00474a">&pound;${total.toFixed(2)}</td>
+      <td colspan="3" style="padding:8px 12px;text-align:right;font-weight:bold;font-size:14px;color:${brand.colors.navy}">Total</td>
+      <td style="padding:8px 12px 8px 8px;text-align:right;font-weight:bold;font-size:14px;color:${brand.colors.navy}">&pound;${total.toFixed(2)}</td>
     </tr>
     ${hasCustomItems ? `<tr><td colspan="4" style="padding:12px;text-align:center;font-size:12px;color:#d97706;background:#fffbeb;border-radius:0 0 8px 8px">* Custom sign items will be quoted separately. Final pricing confirmed after review.</td></tr>` : ""}`;
 }
@@ -190,7 +191,7 @@ export async function sendOrderConfirmation(order: OrderData): Promise<void> {
 
   try {
     await transporter.sendMail({
-      from: `Persimmon Signage <${fromEmail}>`,
+      from: `${brand.email.senderName} <${fromEmail}>`,
       to: order.email,
       subject: `Order Confirmed - ${order.orderNumber}`,
       attachments,
@@ -203,7 +204,7 @@ export async function sendOrderConfirmation(order: OrderData): Promise<void> {
 
             <div style="background:#f8faf9;border-radius:8px;padding:16px 20px;margin:20px 0">
               <p style="margin:0 0 4px;font-size:13px;color:#666">Order Number</p>
-              <p style="margin:0;font-size:18px;font-weight:bold;color:#00474a">${order.orderNumber}</p>
+              <p style="margin:0;font-size:18px;font-weight:bold;color:${brand.colors.navy}">${order.orderNumber}</p>
             </div>
 
             <div style="margin:20px 0">
@@ -251,7 +252,7 @@ export async function sendTeamNotification(order: OrderData): Promise<void> {
   console.log(`[EMAIL] Sending team notification with ${attachments.length} inline image(s)`);
 
   await transporter.sendMail({
-    from: `Persimmon Signage Portal <${fromEmail}>`,
+    from: `${brand.email.senderName} <${fromEmail}>`,
     to: teamEmail,
     subject: `New Order: ${order.orderNumber} - ${esc(order.siteName)}`,
     attachments,
@@ -260,7 +261,7 @@ export async function sendTeamNotification(order: OrderData): Promise<void> {
         ${emailHeaderHtml("New Order Received", siteUrl)}
         <div style="padding:32px;border:1px solid #eee;border-top:none;border-radius:0 0 12px 12px">
           <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px 20px;margin-bottom:24px">
-            <p style="margin:0;font-size:18px;font-weight:bold;color:#00474a">${order.orderNumber}</p>
+            <p style="margin:0;font-size:18px;font-weight:bold;color:${brand.colors.navy}">${order.orderNumber}</p>
             <p style="margin:4px 0 0;font-size:14px;color:#666">&pound;${order.total.toFixed(2)} inc. VAT &middot; ${order.items.length} items</p>
           </div>
 
@@ -321,7 +322,7 @@ export async function sendNestPORequest(order: OrderData): Promise<void> {
   const attachments = buildImageAttachments(order.items, siteUrl);
 
   await transporter.sendMail({
-    from: `Persimmon Signage Portal <${fromEmail}>`,
+    from: `${brand.email.senderName} <${fromEmail}>`,
     to: nestEmail,
     subject: `PO Request — ${order.orderNumber} — ${esc(order.siteName)}`,
     attachments,
@@ -330,7 +331,7 @@ export async function sendNestPORequest(order: OrderData): Promise<void> {
         ${emailHeaderHtml("Purchase Order Request", siteUrl)}
         <div style="padding:32px;border:1px solid #eee;border-top:none;border-radius:0 0 12px 12px">
           <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px 20px;margin-bottom:24px">
-            <p style="margin:0;font-size:18px;font-weight:bold;color:#00474a">${order.orderNumber}</p>
+            <p style="margin:0;font-size:18px;font-weight:bold;color:${brand.colors.navy}">${order.orderNumber}</p>
             <p style="margin:4px 0 0;font-size:14px;color:#666">&pound;${order.total.toFixed(2)} inc. VAT &middot; ${order.items.length} items</p>
           </div>
 
@@ -381,7 +382,7 @@ export function buildNestPOEmailHtml(order: OrderData, siteUrl: string, raisePoU
   const wb = "word-break:break-word;overflow-wrap:break-word";
   const buttonHtml = raisePoUrl
     ? `<div style="text-align:center;margin:28px 0 8px">
-        <a href="${raisePoUrl}" style="background:#3db28c;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;display:inline-block;font-size:16px;font-weight:bold;letter-spacing:0.5px">Send to Purchaser</a>
+        <a href="${raisePoUrl}" style="background:${brand.colors.primary};color:white;padding:14px 32px;border-radius:8px;text-decoration:none;display:inline-block;font-size:16px;font-weight:bold;letter-spacing:0.5px">Send to Purchaser</a>
         <p style="margin:8px 0 0;font-size:12px;color:#999">Click to forward this order to the purchaser for PO attachment</p>
       </div>`
     : "";
@@ -392,7 +393,7 @@ export function buildNestPOEmailHtml(order: OrderData, siteUrl: string, raisePoU
         ${emailHeaderHtml("Purchase Order Request", siteUrl)}
         <div style="padding:32px;border:1px solid #eee;border-top:none;border-radius:0 0 12px 12px">
           <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px 20px;margin-bottom:24px">
-            <p style="margin:0;font-size:18px;font-weight:bold;color:#00474a">${order.orderNumber}</p>
+            <p style="margin:0;font-size:18px;font-weight:bold;color:${brand.colors.navy}">${order.orderNumber}</p>
             <p style="margin:4px 0 0;font-size:14px;color:#666">&pound;${order.total.toFixed(2)} inc. VAT &middot; ${order.items.length} items</p>
           </div>
 
@@ -452,7 +453,7 @@ export function buildPurchaserPOEmailHtml(order: OrderData, siteUrl: string, upl
           <p style="font-size:15px;color:#333;margin:0 0 24px">A signage order has been placed and requires a purchase order. Please review the details below and attach your PO document.</p>
 
           <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px 20px;margin-bottom:24px">
-            <p style="margin:0;font-size:18px;font-weight:bold;color:#00474a">${order.orderNumber}</p>
+            <p style="margin:0;font-size:18px;font-weight:bold;color:${brand.colors.navy}">${order.orderNumber}</p>
             <p style="margin:4px 0 0;font-size:14px;color:#666">&pound;${order.total.toFixed(2)} inc. VAT &middot; ${order.items.length} items</p>
           </div>
 
@@ -492,7 +493,7 @@ export function buildPurchaserPOEmailHtml(order: OrderData, siteUrl: string, upl
           </table>
 
           <div style="text-align:center;margin:28px 0 8px">
-            <a href="${uploadPoUrl}" style="background:#3db28c;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;display:inline-block;font-size:16px;font-weight:bold;letter-spacing:0.5px">Attach PO</a>
+            <a href="${uploadPoUrl}" style="background:${brand.colors.primary};color:white;padding:14px 32px;border-radius:8px;text-decoration:none;display:inline-block;font-size:16px;font-weight:bold;letter-spacing:0.5px">Attach PO</a>
             <p style="margin:8px 0 0;font-size:12px;color:#999">Click to upload your purchase order document for this order</p>
           </div>
         </div>
@@ -503,6 +504,6 @@ export function buildPurchaserPOEmailHtml(order: OrderData, siteUrl: string, upl
 /** Generate a raise-PO token for an order number */
 export function generateRaisePoToken(orderNumber: string): string {
   const crypto = require("crypto");
-  const secret = process.env.RAISE_PO_SECRET || "psp-raise-po-default";
+  const secret = process.env.RAISE_PO_SECRET || "raise-po-default";
   return crypto.createHmac("sha256", secret).update(orderNumber).digest("hex").slice(0, 16);
 }

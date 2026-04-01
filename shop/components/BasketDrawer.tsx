@@ -31,7 +31,7 @@ export default function BasketDrawer() {
         style={{ animation: "drawer-in 0.3s ease-out" }}
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-persimmon-navy">
+          <h2 className="text-lg font-semibold text-brand-navy">
             Your Basket ({totalItems})
           </h2>
           <button
@@ -54,7 +54,7 @@ export default function BasketDrawer() {
             <p className="text-gray-500 text-sm">Your basket is empty</p>
             <button
               onClick={() => setDrawerOpen(false)}
-              className="mt-4 text-persimmon-green text-sm font-medium hover:underline"
+              className="mt-4 text-brand-primary text-sm font-medium hover:underline"
             >
               Continue browsing
             </button>
@@ -79,7 +79,7 @@ export default function BasketDrawer() {
                     {item.customFieldValues && item.customFieldValues.length > 0 && (
                       <div className="mt-0.5">
                         {item.customFieldValues.map((f) => (
-                          <p key={f.key} className="text-[11px] text-persimmon-green truncate">
+                          <p key={f.key} className="text-[11px] text-brand-primary truncate">
                             {f.label}: <span className="text-gray-500">{f.value}</span>
                           </p>
                         ))}
@@ -105,7 +105,7 @@ export default function BasketDrawer() {
                         {item.customSign ? (
                           <span className="text-xs font-semibold text-amber-600">Quote</span>
                         ) : (
-                          <span className="text-sm font-semibold text-persimmon-navy">
+                          <span className="text-sm font-semibold text-brand-navy">
                             {"\u00A3"}{(item.price * item.quantity).toFixed(2)}
                           </span>
                         )}
@@ -153,14 +153,14 @@ export default function BasketDrawer() {
                 {deliveryFee > 0 ? (
                   <span>{"\u00A3"}{deliveryFee.toFixed(2)}</span>
                 ) : (
-                  <span className="text-persimmon-green font-medium">FREE</span>
+                  <span className="text-brand-primary font-medium">FREE</span>
                 )}
               </div>
               <div className="flex justify-between text-sm text-gray-500">
                 <span>VAT (20%)</span>
                 <span>{"\u00A3"}{((totalPrice + deliveryFee) * 0.2).toFixed(2)}</span>
               </div>
-              <div className="flex justify-between font-semibold text-persimmon-navy pt-2 border-t border-gray-100">
+              <div className="flex justify-between font-semibold text-brand-navy pt-2 border-t border-gray-100">
                 <span>Total</span>
                 <span>{"\u00A3"}{((totalPrice + deliveryFee) * 1.2).toFixed(2)}</span>
               </div>
@@ -180,7 +180,7 @@ export default function BasketDrawer() {
                 <Link
                   href="/checkout"
                   onClick={() => setDrawerOpen(false)}
-                  className="py-2.5 text-center rounded-lg bg-persimmon-green text-white text-sm font-medium hover:bg-persimmon-green-dark transition"
+                  className="py-2.5 text-center rounded-lg bg-brand-primary text-white text-sm font-medium hover:bg-brand-primary-dark transition"
                 >
                   Checkout
                 </Link>

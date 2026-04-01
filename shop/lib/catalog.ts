@@ -6,7 +6,7 @@ export interface Variant {
   material: string | null;
   description: string;
   price: number;
-  persimmonPrice: number;
+  clientPrice: number;
   sizeSuffix: string | null;
 }
 

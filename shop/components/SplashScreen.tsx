@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { brand } from "@/lib/brand";
 
 export default function SplashScreen() {
   const [phase, setPhase] = useState<"visible" | "exiting" | "done">("visible");
@@ -32,8 +33,8 @@ export default function SplashScreen() {
         style={{ animation: "splash-icon-in 0.7s ease-out both" }}
       >
         <Image
-          src="/assets/persimmon_icon.svg"
-          alt="Persimmon"
+          src="/assets/icon.svg"
+          alt={brand.name}
           width={64}
           height={62}
           priority
@@ -43,8 +44,8 @@ export default function SplashScreen() {
       {/* Wordmark */}
       <div style={{ animation: "splash-wordmark-in 0.6s ease-out 0.4s both" }}>
         <Image
-          src="/assets/persimmon_wordmark.svg"
-          alt="Persimmon"
+          src="/assets/wordmark.svg"
+          alt={brand.name}
           width={160}
           height={23}
           priority
@@ -56,7 +57,7 @@ export default function SplashScreen() {
         className="text-gray-400 text-xs tracking-[0.2em] uppercase mt-3"
         style={{ animation: "splash-wordmark-in 0.5s ease-out 0.7s both" }}
       >
-        Signage Portal
+        {brand.portalTitle}
       </p>
     </div>
   );

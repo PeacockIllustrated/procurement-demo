@@ -1,13 +1,14 @@
 import Link from "next/link";
+import { brand } from "@/lib/brand";
 
 export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="text-center max-w-md">
         {/* Icon */}
-        <div className="mx-auto w-20 h-20 rounded-2xl bg-persimmon-green/10 flex items-center justify-center mb-6">
+        <div className="mx-auto w-20 h-20 rounded-2xl bg-brand-primary/10 flex items-center justify-center mb-6">
           <svg
-            className="w-10 h-10 text-persimmon-green"
+            className="w-10 h-10 text-brand-primary"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -21,8 +22,8 @@ export default function NotFound() {
           </svg>
         </div>
 
-        <p className="text-6xl font-bold text-persimmon-navy mb-2">404</p>
-        <h1 className="text-xl font-semibold text-persimmon-navy mb-3">
+        <p className="text-6xl font-bold text-brand-navy mb-2">404</p>
+        <h1 className="text-xl font-semibold text-brand-navy mb-3">
           Page not found
         </h1>
         <p className="text-gray-400 text-sm leading-relaxed mb-8">
@@ -33,7 +34,7 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 bg-persimmon-green text-white px-6 py-2.5 rounded-xl font-medium hover:bg-persimmon-green-dark transition active:scale-[0.98]"
+            className="inline-flex items-center gap-2 bg-brand-primary text-white px-6 py-2.5 rounded-xl font-medium hover:bg-brand-primary-dark transition active:scale-[0.98]"
           >
             <svg
               className="w-4 h-4"
@@ -52,14 +53,14 @@ export default function NotFound() {
           </Link>
           <Link
             href="/custom-sign"
-            className="inline-flex items-center gap-2 text-persimmon-green border border-persimmon-green px-6 py-2.5 rounded-xl font-medium hover:bg-persimmon-green/5 transition"
+            className="inline-flex items-center gap-2 text-brand-primary border border-brand-primary px-6 py-2.5 rounded-xl font-medium hover:bg-brand-primary/5 transition"
           >
             Request Custom Sign
           </Link>
         </div>
 
         <p className="text-[11px] text-gray-300 mt-12">
-          Persimmon Signage Portal
+          {brand.fullTitle}
         </p>
       </div>
     </div>

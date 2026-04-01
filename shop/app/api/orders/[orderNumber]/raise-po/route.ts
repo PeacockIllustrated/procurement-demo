@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { brand, tables } from "@/lib/brand";
 import { supabase } from "@/lib/supabase";
 import { buildNestPOEmailHtml, buildPurchaserPOEmailHtml, generateRaisePoToken } from "@/lib/email";
 
@@ -49,7 +50,7 @@ export async function GET(
   try {
     // Fetch order
     const { data: order, error: orderError } = await supabase
-      .from("psp_orders")
+      .from(tables.orders)
       .select("*")
       .eq("order_number", orderNumber)
       .single();
@@ -74,13 +75,13 @@ export async function GET(
 
     // Update status immediately to prevent race conditions from double-clicks
     await supabase
-      .from("psp_orders")
+      .from(tables.orders)
       .update({ status: "awaiting_po" })
       .eq("order_number", orderNumber);
 
     // Fetch order items
     const { data: items } = await supabase
-      .from("psp_order_items")
+      .from(tables.orderItems)
       .select("*")
       .eq("order_id", order.id);
 
@@ -124,7 +125,7 @@ export async function GET(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        brand: "persimmon",
+        brand: brand.webhookBrand,
         isPO: true,
         hasPurchaser,
         emailSubject: subject,

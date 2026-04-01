@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { brand, tables } from "@/lib/brand";
 import { supabase } from "@/lib/supabase";
 import { isAdminAuthed } from "@/lib/auth";
 import { buildNestPOEmailHtml, buildPurchaserPOEmailHtml, generateRaisePoToken } from "@/lib/email";
@@ -16,7 +17,7 @@ export async function POST(
 
     // Fetch order
     const { data: order, error: orderError } = await supabase
-      .from("psp_orders")
+      .from(tables.orders)
       .select("*")
       .eq("order_number", orderNumber)
       .single();
@@ -35,7 +36,7 @@ export async function POST(
 
     // Fetch order items
     const { data: items } = await supabase
-      .from("psp_order_items")
+      .from(tables.orderItems)
       .select("*")
       .eq("order_id", order.id);
 
@@ -86,7 +87,7 @@ export async function POST(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        brand: "persimmon",
+        brand: brand.webhookBrand,
         isPO: true,
         emailSubject: subject,
         emailHtml: html,
@@ -121,7 +122,7 @@ export async function POST(
     // Update status to awaiting_po if currently new
     if (order.status === "new") {
       await supabase
-        .from("psp_orders")
+        .from(tables.orders)
         .update({ status: "awaiting_po" })
         .eq("order_number", orderNumber);
     }

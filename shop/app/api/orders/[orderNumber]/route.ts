@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { tables } from "@/lib/brand";
 import { supabase } from "@/lib/supabase";
 import { isAdminAuthed } from "@/lib/auth";
 
@@ -20,7 +21,7 @@ export async function PATCH(
     }
 
     const { data, error } = await supabase
-      .from("psp_orders")
+      .from(tables.orders)
       .update({ status: body.status })
       .eq("order_number", orderNumber)
       .select()
@@ -56,7 +57,7 @@ export async function DELETE(
     const { orderNumber } = await params;
 
     const { data: order, error: findErr } = await supabase
-      .from("psp_orders")
+      .from(tables.orders)
       .select("id")
       .eq("order_number", orderNumber)
       .single();
@@ -66,8 +67,8 @@ export async function DELETE(
     }
 
     // Delete items first (FK constraint)
-    await supabase.from("psp_order_items").delete().eq("order_id", order.id);
-    const { error } = await supabase.from("psp_orders").delete().eq("id", order.id);
+    await supabase.from(tables.orderItems).delete().eq("order_id", order.id);
+    const { error } = await supabase.from(tables.orders).delete().eq("id", order.id);
 
     if (error) {
       return NextResponse.json({ error: "Failed to delete order" }, { status: 500 });
@@ -92,7 +93,7 @@ export async function GET(
     const { orderNumber } = await params;
 
     const { data: order, error } = await supabase
-      .from("psp_orders")
+      .from(tables.orders)
       .select("*")
       .eq("order_number", orderNumber)
       .single();
@@ -102,7 +103,7 @@ export async function GET(
     }
 
     const { data: items } = await supabase
-      .from("psp_order_items")
+      .from(tables.orderItems)
       .select("*")
       .eq("order_id", order.id);
 

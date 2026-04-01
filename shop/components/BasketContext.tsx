@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import type { CustomSizeData } from "@/lib/custom-size-pricing";
 import { calculateDeliveryFee } from "@/lib/delivery";
+import { brand } from "@/lib/brand";
 
 export interface CustomSignData {
   signType: string;
@@ -56,7 +57,7 @@ export function BasketProvider({ children }: { children: ReactNode }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("persimmon-basket");
+    const stored = localStorage.getItem(brand.basketKey);
     if (stored) {
       try {
         setItems(JSON.parse(stored));
@@ -67,7 +68,7 @@ export function BasketProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (loaded) {
-      localStorage.setItem("persimmon-basket", JSON.stringify(items));
+      localStorage.setItem(brand.basketKey, JSON.stringify(items));
     }
   }, [items, loaded]);
 

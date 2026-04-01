@@ -31,7 +31,7 @@ export default async function ProductPage({
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       <div className="mb-6 flex items-center gap-2 text-sm text-gray-400">
-        <Link href="/" className="hover:text-persimmon-green transition">
+        <Link href="/" className="hover:text-brand-primary transition">
           All Categories
         </Link>
         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -39,7 +39,7 @@ export default async function ProductPage({
         </svg>
         <Link
           href={`/category/${category.slug}`}
-          className="hover:text-persimmon-green transition"
+          className="hover:text-brand-primary transition"
         >
           {category.name}
         </Link>
@@ -74,10 +74,10 @@ export default async function ProductPage({
         </div>
 
         <div>
-          <p className="text-xs text-persimmon-green font-semibold tracking-wide uppercase mb-2">
+          <p className="text-xs text-brand-primary font-semibold tracking-wide uppercase mb-2">
             {product.baseCode}
           </p>
-          <h1 className="text-2xl font-bold text-persimmon-navy mb-6 leading-tight">
+          <h1 className="text-2xl font-bold text-brand-navy mb-6 leading-tight">
             {product.name}
           </h1>
 
@@ -104,7 +104,7 @@ export default async function ProductPage({
                     )}
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-persimmon-navy">
+                    <p className="text-2xl font-bold text-brand-navy">
                       {"\u00A3"}{variant.price.toFixed(2)}
                     </p>
                     <p className="text-[11px] text-gray-400 mt-0.5">ex. VAT</p>

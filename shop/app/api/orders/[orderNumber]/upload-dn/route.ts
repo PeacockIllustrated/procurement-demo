@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { tables } from "@/lib/brand";
 import { supabase } from "@/lib/supabase";
 import { isAdminAuthed } from "@/lib/auth";
 
@@ -33,7 +34,7 @@ export async function POST(
     const base64 = Buffer.from(arrayBuffer).toString("base64");
 
     const { error } = await supabase
-      .from("psp_orders")
+      .from(tables.orders)
       .update({
         dn_document_name: file.name,
         dn_document_data: base64,

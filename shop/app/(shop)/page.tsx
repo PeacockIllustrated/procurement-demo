@@ -16,13 +16,13 @@ export default async function Home({
     return (
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8">
-          <Link href="/" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-persimmon-green transition mb-3">
+          <Link href="/" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-primary transition mb-3">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             All Categories
           </Link>
-          <h1 className="text-2xl font-bold text-persimmon-navy">
+          <h1 className="text-2xl font-bold text-brand-navy">
             Search results for &ldquo;{query}&rdquo;
           </h1>
           <p className="text-gray-400 text-sm mt-1">{results.length} products found</p>
@@ -51,7 +51,7 @@ export default async function Home({
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="mb-10">
-        <h1 className="text-3xl font-bold text-persimmon-navy tracking-tight">Construction Signage</h1>
+        <h1 className="text-3xl font-bold text-brand-navy tracking-tight">Construction Signage</h1>
         <p className="text-gray-500 mt-2 text-base">Browse our full range of construction site signage. Select a category below.</p>
       </div>
 
@@ -63,15 +63,15 @@ export default async function Home({
             className="group relative bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-200/50 hover:-translate-y-0.5 transition-all duration-300"
           >
             <div className="flex items-start justify-between mb-3">
-              <h2 className="text-lg font-semibold text-persimmon-navy group-hover:text-persimmon-green transition-colors duration-200">
+              <h2 className="text-lg font-semibold text-brand-navy group-hover:text-brand-primary transition-colors duration-200">
                 {category.name}
               </h2>
-              <span className="bg-persimmon-green/8 text-persimmon-green text-xs font-semibold px-2.5 py-1 rounded-full shrink-0 ml-3">
+              <span className="bg-brand-primary/8 text-brand-primary text-xs font-semibold px-2.5 py-1 rounded-full shrink-0 ml-3">
                 {category.productCount}
               </span>
             </div>
             <p className="text-sm text-gray-400 line-clamp-2 leading-relaxed">{category.description}</p>
-            <div className="mt-4 text-persimmon-green text-sm font-medium flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-200 translate-x-0 group-hover:translate-x-1">
+            <div className="mt-4 text-brand-primary text-sm font-medium flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-200 translate-x-0 group-hover:translate-x-1">
               Browse products
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

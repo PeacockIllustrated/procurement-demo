@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { tables } from "@/lib/brand";
 import { supabase } from "@/lib/supabase";
 import { isAdminAuthed } from "@/lib/auth";
 import { calculateDeliveryFee } from "@/lib/delivery";
@@ -22,7 +23,7 @@ export async function PATCH(
 
     // Find the order
     const { data: order, error: orderErr } = await supabase
-      .from("psp_orders")
+      .from(tables.orders)
       .select("id")
       .eq("order_number", orderNumber)
       .single();
@@ -33,7 +34,7 @@ export async function PATCH(
 
     // Find the item and verify it belongs to this order and is a quote item
     const { data: item, error: itemErr } = await supabase
-      .from("psp_order_items")
+      .from(tables.orderItems)
       .select("*")
       .eq("id", itemId)
       .eq("order_id", order.id)
@@ -51,7 +52,7 @@ export async function PATCH(
     const lineTotal = Math.round(price * item.quantity * 100) / 100;
 
     const { error: updateErr } = await supabase
-      .from("psp_order_items")
+      .from(tables.orderItems)
       .update({ price, line_total: lineTotal })
       .eq("id", itemId);
 
@@ -61,7 +62,7 @@ export async function PATCH(
 
     // Recalculate order totals from all items
     const { data: allItems } = await supabase
-      .from("psp_order_items")
+      .from(tables.orderItems)
       .select("price, quantity, line_total")
       .eq("order_id", order.id);
 
@@ -73,7 +74,7 @@ export async function PATCH(
     const total = Math.round((subtotal + deliveryFee + vat) * 100) / 100;
 
     const { error: orderUpdateErr } = await supabase
-      .from("psp_orders")
+      .from(tables.orders)
       .update({ subtotal, delivery_fee: deliveryFee, vat, total })
       .eq("id", order.id);
 

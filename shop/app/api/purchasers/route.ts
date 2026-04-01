@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { tables } from "@/lib/brand";
 import { supabase } from "@/lib/supabase";
 import { isShopAuthed, isAdminAuthed } from "@/lib/auth";
 
@@ -10,7 +11,7 @@ export async function GET() {
   }
 
   const { data, error } = await supabase
-    .from("psp_purchasers")
+    .from(tables.purchasers)
     .select("*")
     .order("name", { ascending: true });
 
@@ -41,7 +42,7 @@ export async function POST(req: NextRequest) {
 
     // Check for existing purchaser with same email (upsert semantics)
     const { data: existing } = await supabase
-      .from("psp_purchasers")
+      .from(tables.purchasers)
       .select("*")
       .eq("email", email)
       .maybeSingle();
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { data, error } = await supabase
-      .from("psp_purchasers")
+      .from(tables.purchasers)
       .insert({ name, email })
       .select()
       .single();
@@ -83,7 +84,7 @@ export async function PUT(req: NextRequest) {
     if (!email || !EMAIL_RE.test(email) || email.length > 200) return NextResponse.json({ error: "Valid email is required" }, { status: 400 });
 
     const { data, error } = await supabase
-      .from("psp_purchasers")
+      .from(tables.purchasers)
       .update({ name, email })
       .eq("id", id)
       .select()
@@ -106,9 +107,9 @@ export async function DELETE(req: NextRequest) {
     if (!id) return NextResponse.json({ error: "id is required" }, { status: 400 });
 
     // Nullify FK references on orders first
-    await supabase.from("psp_orders").update({ purchaser_id: null }).eq("purchaser_id", id);
+    await supabase.from(tables.orders).update({ purchaser_id: null }).eq("purchaser_id", id);
 
-    const { error } = await supabase.from("psp_purchasers").delete().eq("id", id);
+    const { error } = await supabase.from(tables.purchasers).delete().eq("id", id);
     if (error) return NextResponse.json({ error: "Failed to delete purchaser" }, { status: 500 });
     return NextResponse.json({ success: true });
   } catch {

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { tables } from "@/lib/brand";
 import { supabase } from "@/lib/supabase";
 import { generateRaisePoToken } from "@/lib/email";
 import { isAdminAuthed } from "@/lib/auth";
@@ -40,7 +41,7 @@ export async function POST(
 
     // Fetch current status so we only transition awaiting_po → in-progress
     const { data: current } = await supabase
-      .from("psp_orders")
+      .from(tables.orders)
       .select("status")
       .eq("order_number", orderNumber)
       .single();
@@ -56,7 +57,7 @@ export async function POST(
     }
 
     const { error } = await supabase
-      .from("psp_orders")
+      .from(tables.orders)
       .update(updates)
       .eq("order_number", orderNumber);
 

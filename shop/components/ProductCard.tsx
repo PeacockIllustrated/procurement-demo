@@ -35,12 +35,12 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
 
       <div className="p-3.5">
-        <p className="text-[11px] text-persimmon-green font-semibold tracking-wide uppercase mb-1">{product.baseCode}</p>
-        <h3 className="text-sm font-medium text-gray-800 line-clamp-2 leading-snug mb-2.5 group-hover:text-persimmon-navy transition-colors">
+        <p className="text-[11px] text-brand-primary font-semibold tracking-wide uppercase mb-1">{product.baseCode}</p>
+        <h3 className="text-sm font-medium text-gray-800 line-clamp-2 leading-snug mb-2.5 group-hover:text-brand-navy transition-colors">
           {product.name}
         </h3>
         <div className="flex items-baseline justify-between">
-          <span className="text-persimmon-navy font-bold text-base">
+          <span className="text-brand-navy font-bold text-base">
             {hasMultipleVariants && <span className="text-xs font-normal text-gray-400 mr-0.5">from </span>}
             {"\u00A3"}{minPrice.toFixed(2)}
           </span>
