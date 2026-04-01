@@ -62,7 +62,7 @@ export default function OrdersPage() {
   useEffect(() => {
     getOrders()
       .then((orders) => {
-        setOrders(orders as Order[]);
+        setOrders(orders as unknown as Order[]);
         setLoading(false);
       })
       .catch(() => setLoading(false));

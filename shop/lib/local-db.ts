@@ -124,16 +124,16 @@ class QueryBuilder {
       }
 
       if (this.returnSingle) {
-        if (rows.length === 0) return resolve({ data: null, error: { message: "No rows found" } });
-        return resolve({ data: rows[0], error: null });
+        if (rows.length === 0) return Promise.resolve(resolve({ data: null, error: { message: "No rows found" } }));
+        return Promise.resolve(resolve({ data: rows[0], error: null }));
       }
       if (this.returnMaybeSingle) {
-        return resolve({ data: rows[0] || null, error: null });
+        return Promise.resolve(resolve({ data: rows[0] || null, error: null }));
       }
-      return resolve({ data: rows, error: null });
+      return Promise.resolve(resolve({ data: rows, error: null }));
     } catch (e) {
-      if (reject) return reject(e);
-      return resolve({ data: null, error: { message: String(e) } });
+      if (reject) return Promise.resolve(reject(e));
+      return Promise.resolve(resolve({ data: null, error: { message: String(e) } }));
     }
   }
 }
@@ -174,11 +174,11 @@ class InsertBuilder {
       }));
       rows.push(...inserted);
       setTable(this.tableName, rows);
-      if (this.returnSingle) return resolve({ data: inserted[0], error: null });
-      return resolve({ data: inserted, error: null });
+      if (this.returnSingle) return Promise.resolve(resolve({ data: inserted[0], error: null }));
+      return Promise.resolve(resolve({ data: inserted, error: null }));
     } catch (e) {
-      if (reject) return reject(e);
-      return resolve({ data: null, error: { message: String(e) } });
+      if (reject) return Promise.resolve(reject(e));
+      return Promise.resolve(resolve({ data: null, error: { message: String(e) } }));
     }
   }
 }
@@ -226,11 +226,11 @@ class UpdateBuilder {
         }
       }
       setTable(this.tableName, rows);
-      if (this.returnSingle) return resolve({ data: updated[0] || null, error: null });
-      return resolve({ data: updated, error: null });
+      if (this.returnSingle) return Promise.resolve(resolve({ data: updated[0] || null, error: null }));
+      return Promise.resolve(resolve({ data: updated, error: null }));
     } catch (e) {
-      if (reject) return reject(e);
-      return resolve({ data: null, error: { message: String(e) } });
+      if (reject) return Promise.resolve(reject(e));
+      return Promise.resolve(resolve({ data: null, error: { message: String(e) } }));
     }
   }
 }
@@ -258,10 +258,10 @@ class DeleteBuilder {
         (row) => !this.filters.every((f) => row[f.col] === f.val),
       );
       setTable(this.tableName, rows);
-      return resolve({ data: null, error: null });
+      return Promise.resolve(resolve({ data: null, error: null }));
     } catch (e) {
-      if (reject) return reject(e);
-      return resolve({ data: null, error: { message: String(e) } });
+      if (reject) return Promise.resolve(reject(e));
+      return Promise.resolve(resolve({ data: null, error: { message: String(e) } }));
     }
   }
 }
