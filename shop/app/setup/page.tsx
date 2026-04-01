@@ -85,10 +85,12 @@ function LogoUpload({
 
 function ColorPickerField({
   label,
+  description,
   value,
   onChange,
 }: {
   label: string;
+  description: string;
   value: string;
   onChange: (hex: string) => void;
 }) {
@@ -106,40 +108,41 @@ function ColorPickerField({
   };
 
   return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1.5">{label}</label>
-      <div className="flex items-center gap-3">
-        <div className="relative">
-          <input
-            type="color"
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            className="w-12 h-12 rounded-xl border border-gray-200 cursor-pointer p-1"
-          />
-        </div>
+    <div className="flex items-center gap-4 p-4 bg-gray-50/80 rounded-xl border border-gray-100">
+      <div className="relative shrink-0">
         <input
-          type="text"
+          type="color"
           value={value}
-          onChange={(e) => {
-            const v = e.target.value;
-            if (/^#[0-9A-Fa-f]{0,6}$/.test(v)) onChange(v);
-          }}
-          className="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-sm font-mono focus:ring-2 focus:ring-brand-primary/15 focus:border-brand-primary outline-none transition"
-          placeholder="#000000"
+          onChange={(e) => onChange(e.target.value)}
+          className="w-12 h-12 rounded-xl border border-gray-200 cursor-pointer p-1"
         />
-        {hasEyeDropper && (
-          <button
-            type="button"
-            onClick={pickFromScreen}
-            className="p-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition"
-            title="Pick colour from screen"
-          >
-            <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 3l6 6-9 9-6-6 9-9zM3 21l3.5-3.5" />
-            </svg>
-          </button>
-        )}
       </div>
+      <div className="flex-1 min-w-0">
+        <label className="block text-sm font-medium text-gray-700">{label}</label>
+        <p className="text-xs text-gray-400 mt-0.5">{description}</p>
+      </div>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => {
+          const v = e.target.value;
+          if (/^#[0-9A-Fa-f]{0,6}$/.test(v)) onChange(v);
+        }}
+        className="w-24 border border-gray-200 rounded-lg px-3 py-2 text-xs font-mono text-center focus:ring-2 focus:ring-brand-primary/15 focus:border-brand-primary outline-none transition"
+        placeholder="#000000"
+      />
+      {hasEyeDropper && (
+        <button
+          type="button"
+          onClick={pickFromScreen}
+          className="p-2.5 border border-gray-200 rounded-lg hover:bg-white transition shrink-0"
+          title="Pick colour from screen"
+        >
+          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 3l6 6-9 9-6-6 9-9zM3 21l3.5-3.5" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 }
@@ -154,7 +157,6 @@ export default function OnboardingPage() {
   const [primaryColor, setPrimaryColor] = useState("#007B86");
   const [darkColor, setDarkColor] = useState("#1A1A1A");
 
-  // Pre-populate if editing
   useEffect(() => {
     if (brand) {
       setBusinessName(brand.businessName);
@@ -191,92 +193,136 @@ export default function OnboardingPage() {
     );
   }
 
+  const isEditing = !!brand;
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 relative z-10">
-      <div className="w-full max-w-lg" style={{ animation: "slide-up 0.5s ease-out" }}>
-        <div className="text-center mb-8">
-          <div className="w-14 h-14 bg-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-            </svg>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">
-            {brand ? "Edit Your Brand" : "Set Up Your Portal"}
-          </h1>
-          <p className="text-sm text-gray-400">
-            {brand
-              ? "Update your branding below."
-              : "Configure your brand identity to see how the signage portal looks with your branding."}
-          </p>
-        </div>
+      <div className="w-full max-w-xl" style={{ animation: "slide-up 0.5s ease-out" }}>
 
-        <form onSubmit={handleSubmit} className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-100 p-6 shadow-sm space-y-6">
-          {/* Business name */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Business Name</label>
-            <input
-              type="text"
-              value={businessName}
-              onChange={(e) => setBusinessName(e.target.value)}
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-brand-primary/15 focus:border-brand-primary outline-none transition"
-              placeholder="e.g. Acme Construction"
-              autoFocus
-            />
+        {/* Welcome hero */}
+        {!isEditing && (
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-gray-100 rounded-full px-4 py-1.5 mb-6 shadow-sm">
+              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+              <span className="text-xs font-medium text-gray-500">Interactive Demo</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 leading-tight">
+              Your signage portal,<br />your brand.
+            </h1>
+            <p className="text-base text-gray-400 max-w-md mx-auto leading-relaxed">
+              See exactly how your construction signage ordering portal will look. Upload your logo, pick your colours, and explore the full experience.
+            </p>
+          </div>
+        )}
+
+        {/* Edit mode header */}
+        {isEditing && (
+          <div className="text-center mb-8">
+            <div className="w-12 h-12 bg-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-1">Edit Your Brand</h1>
+            <p className="text-sm text-gray-400">Update your branding below.</p>
+          </div>
+        )}
+
+        {/* Setup form */}
+        <form onSubmit={handleSubmit} className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-100 p-6 sm:p-8 shadow-sm space-y-8">
+
+          {/* Section: Identity */}
+          <div className="space-y-5">
+            <div>
+              <h2 className="text-sm font-semibold text-gray-800 uppercase tracking-wider">Identity</h2>
+              <p className="text-xs text-gray-400 mt-0.5">Your company name and logos</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Business Name</label>
+              <input
+                type="text"
+                value={businessName}
+                onChange={(e) => setBusinessName(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-brand-primary/15 focus:border-brand-primary outline-none transition"
+                placeholder="e.g. Acme Construction"
+                autoFocus={!isEditing}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <LogoUpload
+                label="Icon Logo"
+                hint="Square icon for header & favicon"
+                value={iconUrl}
+                onChange={setIconUrl}
+              />
+              <LogoUpload
+                label="Wordmark Logo"
+                hint="Text logo / full brand name"
+                value={wordmarkUrl}
+                onChange={setWordmarkUrl}
+              />
+            </div>
           </div>
 
-          {/* Logo uploads */}
-          <div className="grid grid-cols-2 gap-4">
-            <LogoUpload
-              label="Icon Logo"
-              hint="Square icon for header & favicon"
-              value={iconUrl}
-              onChange={setIconUrl}
-            />
-            <LogoUpload
-              label="Wordmark Logo"
-              hint="Text logo / full brand name"
-              value={wordmarkUrl}
-              onChange={setWordmarkUrl}
-            />
-          </div>
+          {/* Divider */}
+          <div className="border-t border-gray-100" />
 
-          {/* Colour pickers */}
-          <div className="grid grid-cols-2 gap-4">
+          {/* Section: Colours */}
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-sm font-semibold text-gray-800 uppercase tracking-wider">Brand Colours</h2>
+              <p className="text-xs text-gray-400 mt-0.5">Pick colours or use the eyedropper to sample from your logo</p>
+            </div>
+
             <ColorPickerField
               label="Primary Colour"
+              description="Buttons, links, and accents"
               value={primaryColor}
               onChange={setPrimaryColor}
             />
             <ColorPickerField
               label="Dark / Header Colour"
+              description="Header background and headings"
               value={darkColor}
               onChange={setDarkColor}
             />
           </div>
 
-          {/* Preview strip */}
-          <div className="rounded-xl overflow-hidden border border-gray-100">
-            <div className="h-2" style={{ background: primaryColor }} />
-            <div className="flex items-center gap-3 px-4 py-3" style={{ background: darkColor }}>
-              {iconUrl && <img src={iconUrl} alt="" className="h-6 w-6 object-contain" />}
-              {wordmarkUrl && <img src={wordmarkUrl} alt="" className="h-4 object-contain brightness-0 invert" />}
-              {!iconUrl && !wordmarkUrl && (
-                <span className="text-white/60 text-sm">Header preview</span>
-              )}
+          {/* Divider */}
+          <div className="border-t border-gray-100" />
+
+          {/* Preview */}
+          <div className="space-y-3">
+            <h2 className="text-sm font-semibold text-gray-800 uppercase tracking-wider">Preview</h2>
+            <div className="rounded-xl overflow-hidden border border-gray-100 shadow-sm">
+              <div className="h-1.5" style={{ background: primaryColor }} />
+              <div className="flex items-center gap-3 px-4 py-3" style={{ background: darkColor }}>
+                {iconUrl && <img src={iconUrl} alt="" className="h-6 w-6 object-contain" />}
+                {wordmarkUrl && <img src={wordmarkUrl} alt="" className="h-4 object-contain brightness-0 invert" />}
+                {!iconUrl && !wordmarkUrl && (
+                  <span className="text-white/40 text-xs">Your header will appear here</span>
+                )}
+                <div className="ml-auto flex items-center gap-2">
+                  <div className="w-16 h-2 rounded-full bg-white/10" />
+                  <div className="w-8 h-8 rounded-lg" style={{ background: primaryColor, opacity: 0.8 }} />
+                </div>
+              </div>
             </div>
           </div>
 
           <button
             type="submit"
             disabled={!canSubmit}
-            className="w-full text-white py-3 rounded-xl font-medium transition disabled:opacity-50 active:scale-[0.98] shadow-sm"
+            className="w-full text-white py-3.5 rounded-xl font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98] shadow-sm text-sm"
             style={{
               background: canSubmit
                 ? `linear-gradient(135deg, ${primaryColor} 0%, ${darkColor} 100%)`
                 : undefined,
             }}
           >
-            {brand ? "Save Changes" : "Launch Portal"}
+            {isEditing ? "Save Changes" : "Launch Your Portal"}
           </button>
         </form>
 
