@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import Toast from "@/components/Toast";
 import SplashScreen from "@/components/SplashScreen";
 import SuggestionWidget from "@/components/SuggestionWidget";
+import GetStartedCta from "@/components/GetStartedCta";
 
 export default function ShopLayout({
   children,
@@ -38,6 +39,7 @@ export default function ShopLayout({
       <main className="min-h-screen">{children}</main>
       <Toast />
       <SuggestionWidget />
+      <GetStartedCta />
     </BasketProvider>
   );
 }
