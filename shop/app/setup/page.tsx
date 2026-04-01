@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useDemoBrand, DemoBrandConfig } from "@/lib/demo-brand";
+import { useDemoBrand, DemoBrandConfig, DEFAULT_BRAND } from "@/lib/demo-brand";
 
 function fileToDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -325,6 +325,19 @@ export default function OnboardingPage() {
             {isEditing ? "Save Changes" : "Launch Your Portal"}
           </button>
         </form>
+
+        {!isEditing && (
+          <button
+            type="button"
+            onClick={() => {
+              saveBrand(DEFAULT_BRAND);
+              router.push("/");
+            }}
+            className="w-full mt-4 text-sm text-gray-400 hover:text-gray-600 transition py-2"
+          >
+            Skip — explore with demo branding &rarr;
+          </button>
+        )}
 
         <p className="text-center text-[11px] text-gray-300 mt-6">
           Signage Portal Demo — Powered by Onesign

@@ -30,7 +30,6 @@ export interface DemoBrandConfig {
 interface DemoBrandContextType {
   brand: DemoBrandConfig | null;
   isReady: boolean;
-  isDefaultBrand: boolean;
   saveBrand: (config: DemoBrandConfig) => void;
   clearBrand: () => void;
 }
@@ -50,9 +49,8 @@ function applyBrandCssVars(config: DemoBrandConfig) {
 export function DemoBrandProvider({ children }: { children: ReactNode }) {
   const [brand, setBrand] = useState<DemoBrandConfig | null>(null);
   const [isReady, setIsReady] = useState(false);
-  const [isDefaultBrand, setIsDefaultBrand] = useState(false);
 
-  // Load from localStorage on mount, fall back to default brand
+  // Load from localStorage on mount
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -60,16 +58,9 @@ export function DemoBrandProvider({ children }: { children: ReactNode }) {
         const config: DemoBrandConfig = JSON.parse(stored);
         setBrand(config);
         applyBrandCssVars(config);
-        setIsDefaultBrand(false);
-      } else {
-        setBrand(DEFAULT_BRAND);
-        applyBrandCssVars(DEFAULT_BRAND);
-        setIsDefaultBrand(true);
       }
     } catch {
-      setBrand(DEFAULT_BRAND);
-      applyBrandCssVars(DEFAULT_BRAND);
-      setIsDefaultBrand(true);
+      // Corrupt data — ignore
     }
     setIsReady(true);
   }, []);
@@ -78,17 +69,15 @@ export function DemoBrandProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
     setBrand(config);
     applyBrandCssVars(config);
-    setIsDefaultBrand(false);
   }, []);
 
   const clearBrand = useCallback(() => {
     localStorage.removeItem(STORAGE_KEY);
     setBrand(null);
-    setIsDefaultBrand(false);
   }, []);
 
   return (
-    <DemoBrandContext.Provider value={{ brand, isReady, isDefaultBrand, saveBrand, clearBrand }}>
+    <DemoBrandContext.Provider value={{ brand, isReady, saveBrand, clearBrand }}>
       {children}
     </DemoBrandContext.Provider>
   );
