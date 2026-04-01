@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { brand } from "@/lib/brand";
+import { DemoBrandProvider } from "@/lib/demo-brand";
 import "./globals.css";
 
 const inter = Inter({
@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: brand.fullTitle,
-  description: brand.description,
+  title: "Signage Portal Demo",
+  description: "Demo procurement portal — configure your own brand to get started",
 };
 
 export default function RootLayout({
@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
-        {children}
+        <DemoBrandProvider>{children}</DemoBrandProvider>
       </body>
     </html>
   );

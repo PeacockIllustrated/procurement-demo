@@ -1,17 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useBasket } from "./BasketContext";
 import { useState, useEffect } from "react";
 import SearchBar from "./SearchBar";
 import BasketDrawer from "./BasketDrawer";
-import { brand } from "@/lib/brand";
+import { useDemoBrand } from "@/lib/demo-brand";
 
 export default function Header() {
   const { totalItems, totalPrice, setDrawerOpen } = useBasket();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { brand: demoBrand } = useDemoBrand();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 4);
@@ -25,22 +25,10 @@ export default function Header() {
       <header className={`bg-white/95 backdrop-blur-md border-b sticky top-0 z-50 transition-[box-shadow,border-color] duration-300 ${scrolled ? "shadow-md border-gray-200/60" : "border-gray-200/80 shadow-none"}`}>
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-            <Image
-              src="/assets/icon.svg"
-              alt={brand.name}
-              width={28}
-              height={27}
-              className="shrink-0"
-            />
+            <img src={demoBrand?.iconUrl} alt={demoBrand?.businessName || ""} className="w-7 h-7 shrink-0 object-contain" />
             <div className="flex flex-col">
-              <Image
-                src="/assets/wordmark.svg"
-                alt={brand.name}
-                width={90}
-                height={13}
-                className="h-[13px] w-auto"
-              />
-              <span className="text-[10px] text-gray-400 leading-tight mt-0.5 tracking-wide">{brand.portalTitle}</span>
+              <img src={demoBrand?.wordmarkUrl} alt={demoBrand?.businessName || ""} className="h-[13px] w-auto object-contain" />
+              <span className="text-[10px] text-gray-400 leading-tight mt-0.5 tracking-wide">{demoBrand?.portalTitle || "Signage Portal"}</span>
             </div>
           </Link>
 
@@ -49,6 +37,16 @@ export default function Header() {
           </div>
 
           <div className="flex items-center gap-2">
+            <Link
+              href="/setup"
+              className="hidden sm:flex items-center gap-1.5 text-sm text-gray-500 hover:text-brand-navy px-3 py-2 rounded-lg hover:bg-gray-50 transition"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
+              Customise
+            </Link>
+
             <Link
               href="/custom-sign"
               className="hidden sm:flex items-center gap-1.5 text-sm text-gray-500 hover:text-brand-navy px-3 py-2 rounded-lg hover:bg-gray-50 transition"
@@ -102,6 +100,16 @@ export default function Header() {
         {menuOpen && (
           <div className="md:hidden px-4 pb-3 border-t border-gray-100 pt-3">
             <SearchBar />
+            <Link
+              href="/setup"
+              className="flex items-center gap-2 text-sm text-gray-500 hover:text-brand-navy mt-3 px-1"
+              onClick={() => setMenuOpen(false)}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
+              Customise
+            </Link>
             <Link
               href="/custom-sign"
               className="flex items-center gap-2 text-sm text-gray-500 hover:text-brand-navy mt-3 px-1"

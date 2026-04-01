@@ -1,16 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
-import { brand } from "@/lib/brand";
+import { useDemoBrand } from "@/lib/demo-brand";
 
 export default function SplashScreen() {
   const [phase, setPhase] = useState<"visible" | "exiting" | "done">("visible");
+  const { brand: demoBrand } = useDemoBrand();
 
   useEffect(() => {
-    // Start exit after icon + wordmark have animated in and held
     const exitTimer = setTimeout(() => setPhase("exiting"), 2000);
-    // Remove from DOM after exit animation completes
     const doneTimer = setTimeout(() => setPhase("done"), 2600);
     return () => {
       clearTimeout(exitTimer);
@@ -32,24 +30,20 @@ export default function SplashScreen() {
         className="mb-5"
         style={{ animation: "splash-icon-in 0.7s ease-out both" }}
       >
-        <Image
-          src="/assets/icon.svg"
-          alt={brand.name}
-          width={64}
-          height={62}
-          priority
-        />
+        {demoBrand?.iconUrl ? (
+          <img src={demoBrand.iconUrl} alt={demoBrand.businessName} className="w-16 h-16 object-contain" />
+        ) : (
+          <div className="w-16 h-16 bg-gray-200 rounded-2xl" />
+        )}
       </div>
 
       {/* Wordmark */}
       <div style={{ animation: "splash-wordmark-in 0.6s ease-out 0.4s both" }}>
-        <Image
-          src="/assets/wordmark.svg"
-          alt={brand.name}
-          width={160}
-          height={23}
-          priority
-        />
+        {demoBrand?.wordmarkUrl ? (
+          <img src={demoBrand.wordmarkUrl} alt={demoBrand.businessName} className="h-[23px] w-auto object-contain" />
+        ) : (
+          <div className="h-[23px] w-32 bg-gray-200 rounded" />
+        )}
       </div>
 
       {/* Subtitle */}
@@ -57,7 +51,7 @@ export default function SplashScreen() {
         className="text-gray-400 text-xs tracking-[0.2em] uppercase mt-3"
         style={{ animation: "splash-wordmark-in 0.5s ease-out 0.7s both" }}
       >
-        {brand.portalTitle}
+        {demoBrand?.portalTitle || "Signage Portal"}
       </p>
     </div>
   );
